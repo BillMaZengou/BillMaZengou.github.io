@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.6k 字
+                    1.5k 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    31
+                    30
                      分钟
                   </span>
                 
@@ -186,21 +186,54 @@
 <li>Build <em>Resize</em> Function From Scratch</li>
 <li>(Option) Other Interpolation Algorithm</li>
 </ol>
-<hr>
-<h1 id="Two-Basic-Image-Interpolation-Algorithm"><a href="#Two-Basic-Image-Interpolation-Algorithm" class="headerlink" title="Two Basic Image Interpolation Algorithm"></a>Two Basic Image Interpolation Algorithm</h1><h3 id="Nearest-neighbour-interpolation"><a href="#Nearest-neighbour-interpolation" class="headerlink" title="Nearest-neighbour interpolation"></a>Nearest-neighbour interpolation</h3><p>When the image size increases, the extra pixels will use the same value as their nearest neighbour.<br><img src="/images/Nearest1.png" srcset="/img/loading.gif" alt="Nearest"><br>This is the simplest method. However, it is not hard to realise that this approach is problematic as it preserves the same resolution as the small image.</p>
-<h3 id="Bilinear-interpolation"><a href="#Bilinear-interpolation" class="headerlink" title="Bilinear interpolation"></a>Bilinear interpolation</h3><p>Bilinear interpolation tries to estimate the new pixel values using information from their neighbours. Normally, linear relations are assumed in both \(x\) and \(y\) directions, namely bilinear relation. Hopefully, it will give a smoother enlarged image than <strong>Nearest-neighbour interpolation</strong>.</p>
-<p>Typical derivation follows the logic that the enlargement should have bilinear relation and it should work to give a smoother image. Here, I decided to follow the opposite route. By assuming the resulted image is continuous and smooth, we can obtain the <strong>Bilinear interpolation</strong> without assuming bilinear relation at the first place. The full derivation will be shown in <em>Appendix</em>. Two routes are essentially equivalent.<br><img src="/images/Bilinear.png" srcset="/img/loading.gif" alt="Bilinear"><br>The equation is<br>\[<br>  \begin{equation}<br>  f(x, y) = \frac{(x<em>2 - x)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{11}) + \frac{(x - x<em>1)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{21}) + \frac{(x<em>2 - x)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{12}) + \frac{(x - x<em>1)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{22}).<br>  \end{equation}<br>\]<br>Or in matrix form,<br>\[<br>  \begin{equation}<br>  f(x, y) = \frac{1}{(x<em>2 - x_1)(y_2-y_1)} \begin{bmatrix} (x_2-x) &amp; (x-x_1) \end{bmatrix} \begin{bmatrix} f(Q</em>{11}) &amp; f(Q<em>{12}) \ f(Q</em>{21}) &amp; f(Q_{22}) \end{bmatrix} \begin{bmatrix} (y_2-y) \ (y-y_1) \end{bmatrix}.<br>  \end{equation}</p>
-<h2 id=""><a href="#" class="headerlink" title="\]"></a>\]</h2><h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><p>Despite the maths looks complicated, the implementation is straightforward using OpenCV and Python.</p>
-<pre><code>dst = cv2.resize(src, dsize[, dst[, fx[, fy[, interpolation]]]])
-</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image.<br><strong>dst</strong> -&gt; Destination image.<br><strong>dsize</strong> -&gt; (compulsory) Destination image size. If it is \(0\), it is computed as:</p>
-<pre><code>  dsize = Size(round(fx*src.cols), round(fy*src.rows))
-</code></pre><p><strong>fx</strong> -&gt; (optional) Scale factor along the horizontal axis. When it is \(0\), it is computed as:</p>
-<pre><code>  (double)dsize.width/src.cols
-</code></pre><p><strong>fy</strong> -&gt; (optional) Scale factor along the vertical axis. When it is \(0\), it is computed as:</p>
-<pre><code>  (double)dsize.height/src.rows
-</code></pre><p><strong>interpolation</strong> -&gt; (optional) Interpolation method:<br>  <strong>INTER_NEAREST</strong> - a nearest-neighbour interpolation<br>  <strong>INTER_LINEAR</strong> - a bilinear interpolation (used by <em>default</em>)<br>  <em>-Addition-</em><br>  <strong>INTER_AREA</strong> - resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire’-free results. But when the image is zoomed, it is similar to the <strong>INTER_NEAREST</strong> method.<br>  <strong>INTER_CUBIC</strong> - a bicubic interpolation over 4x4 pixel neighbourhood<br>  <strong>INTER_LANCZOS4</strong> - a Lanczos interpolation over 8x8 pixel neighbourhood</p>
+<hr />
+<h1 id="two-basic-image-interpolation-algorithm"><a class="markdownIt-Anchor" href="#two-basic-image-interpolation-algorithm"></a> Two Basic Image Interpolation Algorithm</h1>
+<h3 id="nearest-neighbour-interpolation"><a class="markdownIt-Anchor" href="#nearest-neighbour-interpolation"></a> Nearest-neighbour interpolation</h3>
+<p>When the image size increases, the extra pixels will use the same value as their nearest neighbour.<br />
+<img src="/images/Nearest1.png" srcset="/img/loading.gif" alt="Nearest" /><br />
+This is the simplest method. However, it is not hard to realise that this approach is problematic as it preserves the same resolution as the small image.</p>
+<h3 id="bilinear-interpolation"><a class="markdownIt-Anchor" href="#bilinear-interpolation"></a> Bilinear interpolation</h3>
+<p>Bilinear interpolation tries to estimate the new pixel values using information from their neighbours. Normally, linear relations are assumed in both \(x\) and \(y\) directions, namely bilinear relation. Hopefully, it will give a smoother enlarged image than <strong>Nearest-neighbour interpolation</strong>.</p>
+<h2 id="typical-derivation-follows-the-logic-that-the-enlargement-should-have-bilinear-relation-and-it-should-work-to-give-a-smoother-image-here-i-decided-to-follow-the-opposite-route-by-assuming-the-resulted-image-is-continuous-and-smooth-we-can-obtain-the-bilinear-interpolation-without-assuming-bilinear-relation-at-the-first-place-the-full-derivation-will-be-shown-in-appendix-two-routes-are-essentially-equivalentbilinearthe-equation-isbeginequationfx-y-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22endequationor-in-matrix-formbeginequationfx-y-frac1x_2-x_1y_2-y_1-beginbmatrix-x_2-x-x-x_1-endbmatrix-beginbmatrix-fq_11-fq_12-fq_21-fq_22-endbmatrix-beginbmatrix-y_2-y-y-y_1-endbmatrixendequation"><a class="markdownIt-Anchor" href="#typical-derivation-follows-the-logic-that-the-enlargement-should-have-bilinear-relation-and-it-should-work-to-give-a-smoother-image-here-i-decided-to-follow-the-opposite-route-by-assuming-the-resulted-image-is-continuous-and-smooth-we-can-obtain-the-bilinear-interpolation-without-assuming-bilinear-relation-at-the-first-place-the-full-derivation-will-be-shown-in-appendix-two-routes-are-essentially-equivalentbilinearthe-equation-isbeginequationfx-y-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22endequationor-in-matrix-formbeginequationfx-y-frac1x_2-x_1y_2-y_1-beginbmatrix-x_2-x-x-x_1-endbmatrix-beginbmatrix-fq_11-fq_12-fq_21-fq_22-endbmatrix-beginbmatrix-y_2-y-y-y_1-endbmatrixendequation"></a> Typical derivation follows the logic that the enlargement should have bilinear relation and it should work to give a smoother image. Here, I decided to follow the opposite route. By assuming the resulted image is continuous and smooth, we can obtain the <strong>Bilinear interpolation</strong> without assuming bilinear relation at the first place. The full derivation will be shown in <em>Appendix</em>. Two routes are essentially equivalent.<br />
+<img src="/images/Bilinear.png" srcset="/img/loading.gif" alt="Bilinear" /><br />
+The equation is<br />
+\[<br />
+\begin{equation}<br />
+f(x, y) = \frac{(x_2 - x)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{11}) + \frac{(x - x_1)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{21}) + \frac{(x_2 - x)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{12}) + \frac{(x - x_1)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{22}).<br />
+\end{equation}<br />
+\]<br />
+Or in matrix form,<br />
+\[<br />
+\begin{equation}<br />
+f(x, y) = \frac{1}{(x_2 - x_1)(y_2-y_1)} \begin{bmatrix} (x_2-x) &amp; (x-x_1) \end{bmatrix} \begin{bmatrix} f(Q_{11}) &amp; f(Q_{12}) \ f(Q_{21}) &amp; f(Q_{22}) \end{bmatrix} \begin{bmatrix} (y_2-y) \ (y-y_1) \end{bmatrix}.<br />
+\end{equation}<br />
+\]</h2>
+<h1 id="practice-with-opencv-in-python"><a class="markdownIt-Anchor" href="#practice-with-opencv-in-python"></a> Practice with OpenCV in Python</h1>
+<h3 id="documentation"><a class="markdownIt-Anchor" href="#documentation"></a> Documentation</h3>
+<p>Despite the maths looks complicated, the implementation is straightforward using OpenCV and Python.</p>
+<pre class="highlight"><code class="">dst = cv2.resize(src, dsize[, dst[, fx[, fy[, interpolation]]]])
+</code></pre>
+<p><strong>src</strong> -&gt; (compulsory) Source image.<br />
+<strong>dst</strong> -&gt; Destination image.<br />
+<strong>dsize</strong> -&gt; (compulsory) Destination image size. If it is \(0\), it is computed as:</p>
+<pre class="highlight"><code class="">  dsize = Size(round(fx*src.cols), round(fy*src.rows))
+</code></pre>
+<p><strong>fx</strong> -&gt; (optional) Scale factor along the horizontal axis. When it is \(0\), it is computed as:</p>
+<pre class="highlight"><code class="">  (double)dsize.width/src.cols
+</code></pre>
+<p><strong>fy</strong> -&gt; (optional) Scale factor along the vertical axis. When it is \(0\), it is computed as:</p>
+<pre class="highlight"><code class="">  (double)dsize.height/src.rows
+</code></pre>
+<p><strong>interpolation</strong> -&gt; (optional) Interpolation method:<br />
+<strong>INTER_NEAREST</strong> - a nearest-neighbour interpolation<br />
+<strong>INTER_LINEAR</strong> - a bilinear interpolation (used by <em>default</em>)<br />
+<em>-Addition-</em><br />
+<strong>INTER_AREA</strong> - resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire’-free results. But when the image is zoomed, it is similar to the <strong>INTER_NEAREST</strong> method.<br />
+<strong>INTER_CUBIC</strong> - a bicubic interpolation over 4x4 pixel neighbourhood<br />
+<strong>INTER_LANCZOS4</strong> - a Lanczos interpolation over 8x8 pixel neighbourhood</p>
 <p><em>Note</em> that, normally, <strong>INTER_AREA</strong> is used when scaling down the image. Otherwise, <strong>INTER_CUBIC</strong> and <strong>INTER_LINEAR</strong> are good choices. But <strong>INTER_CUBIC</strong> is a bit slow.</p>
-<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import cv2
+<h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
+<pre class="highlight"><code class="">import cv2
 
 img = cv2.imread(image_name, cv2.IMREAD_UNCHANGED)
 scale_percent = 5       # percent of original size
@@ -223,37 +256,112 @@ cv2.imshow(&quot;Resized image&quot;, resized)
 cv2.imshow(&quot;INTER_NEAREST image&quot;, resized1)
 cv2.imshow(&quot;INTER_LINEAR image&quot;, resized2)
 
-# Press &#39;s&#39; for saving the image
+# Press 's' for saving the image
 k = cv2.waitKey(0)
 if k == 27:         # wait for ESC key to exit
     cv2.destroyAllWindows()
-elif k == ord(&#39;s&#39;): # wait for &#39;s&#39; key to save and exit
+elif k == ord('s'): # wait for 's' key to save and exit
     cv2.imwrite(&quot;Resized_image.jpg&quot;,resized)
     cv2.imwrite(&quot;INTER_NEAREST_image.jpg&quot;,resized1)
     cv2.imwrite(&quot;INTER_LINEAR_image.jpg&quot;,resized2)
     cv2.destroyAllWindows()
-</code></pre><p>Example results are shown below:<br><strong>Scale down the original image by 95% using Bilinear interpolation</strong><br><img src="/images/Resized_image.jpg" srcset="/img/loading.gif" alt="small"></p>
-<p><strong>Scale up the resized image by 30% using Nearest-neighbour interpolation</strong><br><img src="/images/INTER_NEAREST_image.jpg" srcset="/img/loading.gif" alt="nearest_image"></p>
-<p><strong>Scale up the resized image by 30% using Bilinear interpolation</strong><br><img src="/images/INTER_LINEAR_image.jpg" srcset="/img/loading.gif" alt="bilinear_image"><br>It is clear that the result of the Bilinear interpolation is much smoother than it of the Nearest-neighbour interpolation.</p>
-<hr>
-<h2 id="Build-Resize-Function-From-Scratch-TODO"><a href="#Build-Resize-Function-From-Scratch-TODO" class="headerlink" title="Build Resize Function From Scratch (TODO)"></a>Build <em>Resize</em> Function From Scratch (TODO)</h2><hr>
-<h2 id="Option-Other-Interpolation-Algorithm-TODO"><a href="#Option-Other-Interpolation-Algorithm-TODO" class="headerlink" title="(Option) Other Interpolation Algorithm (TODO)"></a>(Option) Other Interpolation Algorithm (TODO)</h2><hr>
-<h2 id="Appendix-Derivation-of-Bilinear-interpolation"><a href="#Appendix-Derivation-of-Bilinear-interpolation" class="headerlink" title="Appendix - Derivation of Bilinear interpolation"></a>Appendix - Derivation of Bilinear interpolation</h2><p><img src="/images/Bilinear.png" srcset="/img/loading.gif" alt="Bilinear"><br>Assumptions: The image is smooth in any directions; \(Q<em>{11}\), \(Q</em>{12}\), \(Q<em>{21}\), \(Q</em>{22}\), \(R_1\), \(R_2\) and \(P\) are close enough.</p>
-<p>Follow by the assumptions, we have<br>\[<br>\begin{equation}<br>f(R<em>1) = f(P) - \frac{\partial f(P)}{\partial y}\Bigr\rvert</em>{x} (y-y<em>1);<br>f(R_2) = f(P) + \frac{\partial f(P)}{\partial y}\Bigr\rvert</em>{x} (y<em>2-y).<br>\end{equation}<br>\]<br>Then,<br>\[<br>\begin{equation}<br>f(Q</em>{11}) = f(R<em>1) - \frac{\partial f(R_1)}{\partial x}\Bigr\rvert</em>{y<em>1} (x-x_1); f(Q</em>{21}) = f(R<em>1) + \frac{\partial f(R_1)}{\partial x}\Bigr\rvert</em>{y1} (x<em>2-x);<br>\end{equation}<br>\begin{equation}<br>f(Q</em>{12}) = f(R<em>2) - \frac{\partial f(R_2)}{\partial x}\Bigr\rvert</em>{y<em>2} (x-x_1); f(Q</em>{22}) = f(R<em>2) + \frac{\partial f(R_2)}{\partial x}\Bigr\rvert</em>{y2} (x<em>2-x).<br>\end{equation}<br>\]<br>Substituting \(f(R_1)\) and \(f(R_2)\) into the equations, we find that<br>\[<br>\begin{equation}<br>f(Q</em>{11}) = f(P) - \frac{\partial f(P)}{\partial y}\Bigr\rvert<em>{x} (y-y_1) - \frac{\partial f(P)}{\partial x}\Bigr\rvert</em>{y<em>1} (x-x_1) + \frac{\partial^2 f(P)}{\partial x \partial y}\Bigr\rvert</em>{y<em>1} (x-x_1) (y-y_1),<br>\end{equation}<br>\]<br>the last term equals \(0\) as the function is evaluated at \(y=y_1\). Therefore, we have<br>\[<br>\begin{equation}<br>f(Q</em>{11}) = f(P) - \frac{\partial f(P)}{\partial y}\Bigr\rvert<em>{x} (y-y_1) - \frac{\partial f(P)}{\partial x}\Bigr\rvert</em>{y<em>1} (x-x_1);<br>\end{equation}<br>\begin{equation}<br>f(Q</em>{21}) = f(P) - \frac{\partial f(P)}{\partial y}\Bigr\rvert<em>{x} (y-y_1) + \frac{\partial f(P)}{\partial x}\Bigr\rvert</em>{y<em>1} (x_2-x);<br>\end{equation}<br>\begin{equation}<br>f(Q</em>{12}) = f(P) + \frac{\partial f(P)}{\partial y}\Bigr\rvert<em>{x} (y_2-y) - \frac{\partial f(P)}{\partial x}\Bigr\rvert</em>{y<em>2} (x-x_1);<br>\end{equation}<br>\begin{equation}<br>f(Q</em>{22}) = f(P) + \frac{\partial f(P)}{\partial y}\Bigr\rvert<em>{x} (y_2-y) + \frac{\partial f(P)}{\partial x}\Bigr\rvert</em>{y_2} (x_2-x).<br>\end{equation}<br>\]</p>
-<p>By rearranging the equations, we can find that<br>\[<br>\begin{equation}<br>\frac{\partial f(P)}{\partial y}\Bigr\rvert<em>{x} (y-y_1) = f(P) - f(Q</em>{11}) - \frac{\partial f(P)}{\partial x}\Bigr\rvert<em>{y_1} (x-x_1) = f(P) - f(Q</em>{21}) + \frac{\partial f(P)}{\partial x}\Bigr\rvert<em>{y_1} (x_2-x);<br>\end{equation}<br>\begin{equation}<br>\frac{\partial f(P)}{\partial y}\Bigr\rvert</em>{x}(y<em>2-y) = f(Q</em>{12}) - f(P) +  \frac{\partial f(P)}{\partial x}\Bigr\rvert<em>{y_2} (x-x_1) = f(Q</em>{22}) - f(P) - \frac{\partial f(P)}{\partial x}\Bigr\rvert<em>{y_2} (x_2-x).<br>\end{equation}<br>\]<br>Then,<br>\[<br>\begin{equation}<br>\frac{\partial f(P)}{\partial x}\Bigr\rvert</em>{y<em>1} = \frac{f(Q</em>{21}) - f(Q<em>{11})}{x_2-x_1};<br>\end{equation}<br>\begin{equation}<br>\frac{\partial f(P)}{\partial x}\Bigr\rvert</em>{y<em>2} = \frac{f(Q</em>{22}) - f(Q_{12})}{x_2-x_1}.<br>\end{equation}<br>\]</p>
-<p>Substituting the above equations back, we can fine \(\frac{\partial f(x, y)}{\partial y}\Bigr\rvert<em>{x}\) as<br>\[<br>\begin{equation}<br>\frac{\partial f(x, y)}{\partial y}\Bigr\rvert</em>{x} = \frac{f(P) - f(Q<em>{11})}{y-y_1} - \frac{x-x_1}{y-y_1}\frac{f(Q</em>{21} - f(Q<em>{11}))}{x_2-x_1} = \frac{f(Q</em>{12} - f(P))}{y<em>2-y} - \frac{x-x_1}{y_2-y}\frac{f(Q</em>{22} - f(Q_{12}))}{x_2-x_1}.<br>\end{equation}<br>\]</p>
-<p>Rearrange to get \(f(x, y)\). Finally, we have the <strong>Bilinear relation</strong> that we want.<br>\[<br>\begin{equation}<br>f(x, y) = \frac{(x<em>2 - x)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{11}) + \frac{(x - x<em>1)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{21}) + \frac{(x<em>2 - x)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{12}) + \frac{(x - x<em>1)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q</em>{22}).<br>\end{equation}</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title="\]"></a>\]</h2><h2 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h2><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
-<hr>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
-<li>Blog.csdn.net. 2020. Opencv框架与图像插值算法_网络_Weixin_39940512的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_39940512/article/details/105343418" target="_blank" rel="noopener">https://blog.csdn.net/weixin_39940512/article/details/105343418</a> [Accessed 20 April 2020].</li>
-<li>Angel, A., 2020. Nearest Neighbor Interpolation. [online] Imageeprocessing.com. Available at: <a href="https://www.imageeprocessing.com/2017/11/nearest-neighbor-interpolation.html" target="_blank" rel="noopener">https://www.imageeprocessing.com/2017/11/nearest-neighbor-interpolation.html</a> [Accessed 19 April 2020].</li>
-<li>En.wikipedia.org. 2020. Bilinear Interpolation. [online] Available at: <a href="https://en.wikipedia.org/wiki/Bilinear_interpolation" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Bilinear_interpolation</a> [Accessed 20 April 2020].</li>
-<li>Opencv.org.cn. 2020. Geometric Image Transformations — Opencv 2.3.2 Documentation. [online] Available at: <a href="http://www.opencv.org.cn/opencvdoc/2.3.2/html/modules/imgproc/doc/geometric_transformations.html?highlight=resize#cv.Resize" target="_blank" rel="noopener">http://www.opencv.org.cn/opencvdoc/2.3.2/html/modules/imgproc/doc/geometric_transformations.html?highlight=resize#cv.Resize</a> [Accessed 20 April 2020].</li>
+</code></pre>
+<p>Example results are shown below:<br />
+<strong>Scale down the original image by 95% using Bilinear interpolation</strong><br />
+<img src="/images/Resized_image.jpg" srcset="/img/loading.gif" alt="small" /></p>
+<p><strong>Scale up the resized image by 30% using Nearest-neighbour interpolation</strong><br />
+<img src="/images/INTER_NEAREST_image.jpg" srcset="/img/loading.gif" alt="nearest_image" /></p>
+<p><strong>Scale up the resized image by 30% using Bilinear interpolation</strong><br />
+<img src="/images/INTER_LINEAR_image.jpg" srcset="/img/loading.gif" alt="bilinear_image" /><br />
+It is clear that the result of the Bilinear interpolation is much smoother than it of the Nearest-neighbour interpolation.</p>
+<hr />
+<h1 id="build-resize-function-from-scratch-todo"><a class="markdownIt-Anchor" href="#build-resize-function-from-scratch-todo"></a> Build <em>Resize</em> Function From Scratch (TODO)</h1>
+<hr />
+<h1 id="option-other-interpolation-algorithm-todo"><a class="markdownIt-Anchor" href="#option-other-interpolation-algorithm-todo"></a> (Option) Other Interpolation Algorithm (TODO)</h1>
+<hr />
+<h1 id="appendix-derivation-of-bilinear-interpolation"><a class="markdownIt-Anchor" href="#appendix-derivation-of-bilinear-interpolation"></a> Appendix - Derivation of Bilinear interpolation</h1>
+<p><img src="/images/Bilinear.png" srcset="/img/loading.gif" alt="Bilinear" /><br />
+Assumptions: The image is smooth in any directions; \(Q_{11}\), \(Q_{12}\), \(Q_{21}\), \(Q_{22}\), \(R_1\), \(R_2\) and \(P\) are close enough.</p>
+<p>Follow by the assumptions, we have<br />
+\[<br />
+\begin{equation}<br />
+f(R_1) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1);<br />
+f(R_2) = f§ + \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y_2-y).<br />
+\end{equation}<br />
+\]<br />
+Then,<br />
+\[<br />
+\begin{equation}<br />
+f(Q_{11}) = f(R_1) - \frac{\partial f(R_1)}{\partial x}\Bigr\rvert_{y_1} (x-x_1); f(Q_{21}) = f(R_1) + \frac{\partial f(R_1)}{\partial x}\Bigr\rvert_{y1} (x_2-x);<br />
+\end{equation}<br />
+\begin{equation}<br />
+f(Q_{12}) = f(R_2) - \frac{\partial f(R_2)}{\partial x}\Bigr\rvert_{y_2} (x-x_1); f(Q_{22}) = f(R_2) + \frac{\partial f(R_2)}{\partial x}\Bigr\rvert_{y2} (x_2-x).<br />
+\end{equation}<br />
+\]<br />
+Substituting \(f(R_1)\) and \(f(R_2)\) into the equations, we find that<br />
+\[<br />
+\begin{equation}<br />
+f(Q_{11}) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x-x_1) + \frac{\partial^2 f§}{\partial x \partial y}\Bigr\rvert_{y_1} (x-x_1) (y-y_1),<br />
+\end{equation}<br />
+\]<br />
+the last term equals \(0\) as the function is evaluated at \(y=y_1\). Therefore, we have<br />
+\[<br />
+\begin{equation}<br />
+f(Q_{11}) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x-x_1);<br />
+\end{equation}<br />
+\begin{equation}<br />
+f(Q_{21}) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) + \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x_2-x);<br />
+\end{equation}<br />
+\begin{equation}<br />
+f(Q_{12}) = f§ + \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y_2-y) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x-x_1);<br />
+\end{equation}<br />
+\begin{equation}<br />
+f(Q_{22}) = f§ + \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y_2-y) + \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x_2-x).<br />
+\end{equation}<br />
+\]</p>
+<p>By rearranging the equations, we can find that<br />
+\[<br />
+\begin{equation}<br />
+\frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) = f§ - f(Q_{11}) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x-x_1) = f§ - f(Q_{21}) + \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x_2-x);<br />
+\end{equation}<br />
+\begin{equation}<br />
+\frac{\partial f§}{\partial y}\Bigr\rvert_{x}(y_2-y) = f(Q_{12}) - f§ +  \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x-x_1) = f(Q_{22}) - f§ - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x_2-x).<br />
+\end{equation}<br />
+\]<br />
+Then,<br />
+\[<br />
+\begin{equation}<br />
+\frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} = \frac{f(Q_{21}) - f(Q_{11})}{x_2-x_1};<br />
+\end{equation}<br />
+\begin{equation}<br />
+\frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} = \frac{f(Q_{22}) - f(Q_{12})}{x_2-x_1}.<br />
+\end{equation}<br />
+\]</p>
+<p>Substituting the above equations back, we can fine \(\frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x}\) as<br />
+\[<br />
+\begin{equation}<br />
+\frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} = \frac{f§ - f(Q_{11})}{y-y_1} - \frac{x-x_1}{y-y_1}\frac{f(Q_{21} - f(Q_{11}))}{x_2-x_1} = \frac{f(Q_{12} - f§)}{y_2-y} - \frac{x-x_1}{y_2-y}\frac{f(Q_{22} - f(Q_{12}))}{x_2-x_1}.<br />
+\end{equation}<br />
+\]</p>
+<h2 id="rearrange-to-get-fx-y-finally-we-have-the-bilinear-relation-that-we-wantbeginequationfx-y-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22endequation"><a class="markdownIt-Anchor" href="#rearrange-to-get-fx-y-finally-we-have-the-bilinear-relation-that-we-wantbeginequationfx-y-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22endequation"></a> Rearrange to get \(f(x, y)\). Finally, we have the <strong>Bilinear relation</strong> that we want.<br />
+\[<br />
+\begin{equation}<br />
+f(x, y) = \frac{(x_2 - x)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{11}) + \frac{(x - x_1)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{21}) + \frac{(x_2 - x)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{12}) + \frac{(x - x_1)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{22}).<br />
+\end{equation}<br />
+\]</h2>
+<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
+<p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr />
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
+<ol>
+<li><a href="http://Blog.csdn.net" target="_blank" rel="noopener">Blog.csdn.net</a>. 2020. Opencv框架与图像插值算法_网络_Weixin_39940512的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_39940512/article/details/105343418" target="_blank" rel="noopener">https://blog.csdn.net/weixin_39940512/article/details/105343418</a> [Accessed 20 April 2020].</li>
+<li>Angel, A., 2020. Nearest Neighbor Interpolation. [online] <a href="http://Imageeprocessing.com" target="_blank" rel="noopener">Imageeprocessing.com</a>. Available at: <a href="https://www.imageeprocessing.com/2017/11/nearest-neighbor-interpolation.html" target="_blank" rel="noopener">https://www.imageeprocessing.com/2017/11/nearest-neighbor-interpolation.html</a> [Accessed 19 April 2020].</li>
+<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Bilinear Interpolation. [online] Available at: <a href="https://en.wikipedia.org/wiki/Bilinear_interpolation" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Bilinear_interpolation</a> [Accessed 20 April 2020].</li>
+<li><a href="http://Opencv.org.cn" target="_blank" rel="noopener">Opencv.org.cn</a>. 2020. Geometric Image Transformations — Opencv 2.3.2 Documentation. [online] Available at: <a href="http://www.opencv.org.cn/opencvdoc/2.3.2/html/modules/imgproc/doc/geometric_transformations.html?highlight=resize#cv.Resize" target="_blank" rel="noopener">http://www.opencv.org.cn/opencvdoc/2.3.2/html/modules/imgproc/doc/geometric_transformations.html?highlight=resize#cv.Resize</a> [Accessed 20 April 2020].</li>
 <li>Photo by Viktor Mogilat on Unsplash.</li>
-<li>Opencv-python-tutroals.readthedocs.io. 2020. Getting Started With Images — Opencv-Python Tutorials 1 Documentation. [online] Available at: <a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_image_display/py_image_display.html" target="_blank" rel="noopener">https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_image_display/py_image_display.html</a> [Accessed 20 April 2020].</li>
+<li><a href="http://Opencv-python-tutroals.readthedocs.io" target="_blank" rel="noopener">Opencv-python-tutroals.readthedocs.io</a>. 2020. Getting Started With Images — Opencv-Python Tutorials 1 Documentation. [online] Available at: <a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_image_display/py_image_display.html" target="_blank" rel="noopener">https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_image_display/py_image_display.html</a> [Accessed 20 April 2020].</li>
 </ol>
-<hr>
+<hr />
 
             </article>
             <hr>
