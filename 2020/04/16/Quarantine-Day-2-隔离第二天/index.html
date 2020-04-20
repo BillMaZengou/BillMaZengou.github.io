@@ -6,7 +6,7 @@
 
 
 <head>
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
   <link rel="icon" type="image/png" href="/img/favicon.png">
   <meta name="viewport"
@@ -38,11 +38,11 @@
 <!-- 自定义样式保持在最底部 -->
 
 
-<meta name="generator" content="Hexo 4.2.0"></head>
+<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
 
 <body>
-  <header style="height: 70vh;">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -178,8 +178,8 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>Today is the second day of my quarantine session. Due to the unespected situation and my original career path, I decided to accelerate my job hunting. But when I begin, I am a little comfused and upset. I understand I need sometime to digest a new way of thinking. I might be immature and naive. I almost spent the whole day in looking for information and filling up different files. </p>
-<p>To summarise some points that I obtained today, I need to firm my essential coding skills. I did not learn programming until last year, but it cannot be my excuse. Also, I need to find out how I can use what I know to make profit. This year, I learned about Computer Vision, Graphics, VR/AR. I enjoyed learning new stuff but worried little about what I can do with these cutting-edge technologies. Also, I need to link these back to the fundamental data sturctures and popular libraries. </p>
+              <p>Today is the second day of my quarantine session. Due to the unespected situation and my original career path, I decided to accelerate my job hunting. But when I begin, I am a little comfused and upset. I understand I need sometime to digest a new way of thinking. I might be immature and naive. I almost spent the whole day in looking for information and filling up different files.</p>
+<p>To summarise some points that I obtained today, I need to firm my essential coding skills. I did not learn programming until last year, but it cannot be my excuse. Also, I need to find out how I can use what I know to make profit. This year, I learned about Computer Vision, Graphics, VR/AR. I enjoyed learning new stuff but worried little about what I can do with these cutting-edge technologies. Also, I need to link these back to the fundamental data sturctures and popular libraries.</p>
 <p>Hope today’s work can help me make my mind!</p>
 
             </article>
@@ -203,6 +203,12 @@
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/04/19/Computer-Vision-Fundation-Image-Processing1-Digital-Image-Interpolation/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Computer Vision Foundation -> Image Processing1: Digital Image Interpolation</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">
@@ -426,6 +432,37 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+              processEscapes: true,
+              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+      });
+      MathJax.Hub.Register.StartupHook("End Jax",function () {
+        var BROWSER = MathJax.Hub.Browser;
+        var jax = "HTML-CSS";
+        if (BROWSER.isMSIE && BROWSER.hasMathPlayer) jax = "NativeMML";
+        return MathJax.Hub.setRenderer(jax);
+      });
+      MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+
+    </script>
+
+    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+  
 
 
 
