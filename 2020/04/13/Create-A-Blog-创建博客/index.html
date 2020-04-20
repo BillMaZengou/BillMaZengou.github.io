@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    667 字
+                    654 字
                   </span>
                 
 
@@ -178,93 +178,58 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>Today is 2020/04/13, I will be on the plane to China in about 10 hours. I heard about how writing blog would help improve IT skills for a long time, but did not know when and how to start. Now I finally made my mind to create a blog. For thhe processes, I conducted “<a href="https://www.bilibili.com/video/BV1Yb411a7ty?from=search&amp;seid=13126380643235482353" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1Yb411a7ty?from=search&amp;seid=13126380643235482353</a>”. CodeSheep gave a great and detailed introduction to the Hexo blog framework. As I succeed, I decided to write it down which may make your creation easier and faster.</p>
+              <p>Today is 2020/04/13, I will be on the plane to China in about 10 hours. I heard about how writing blog would help improve IT skills for a long time, but did not know when and how to start. Now I finally made my mind to create a blog. For thhe processes, I conducted “<a href="https://www.bilibili.com/video/BV1Yb411a7ty?from=search&amp;seid=13126380643235482353&quot;" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1Yb411a7ty?from=search&amp;seid=13126380643235482353&quot;</a>. CodeSheep gave a great and detailed introduction to the Hexo blog framework. As I succeed, I decided to write it down which may make your creation easier and faster.</p>
 <p>I used MacOs, so if you encounter any difficulies, google it.</p>
 <p>This article is served as a record for myself. All the credits should be given to CodeSheep. (<a href="https://www.codesheep.cn/" target="_blank" rel="noopener">https://www.codesheep.cn/</a>)</p>
-<h2 id="step-1-download-dependencies"><a class="markdownIt-Anchor" href="#step-1-download-dependencies"></a> Step 1: Download Dependencies</h2>
-<p>nodejs: <a href="https://nodejs.org/en/" target="_blank" rel="noopener">https://nodejs.org/en/</a><br />
-git: <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">https://git-scm.com/downloads</a></p>
+<h2 id="Step-1-Download-Dependencies"><a href="#Step-1-Download-Dependencies" class="headerlink" title="Step 1: Download Dependencies"></a>Step 1: Download Dependencies</h2><p>nodejs: <a href="https://nodejs.org/en/" target="_blank" rel="noopener">https://nodejs.org/en/</a><br>git: <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">https://git-scm.com/downloads</a></p>
 <p>Open Terminal and switch to root user</p>
-<pre class="highlight"><code class="">sudo su
-</code></pre>
-<p>put your password in.</p>
+<pre><code>sudo su</code></pre><p>put your password in.</p>
 <p>Use</p>
-<pre class="highlight"><code class="">node -v
+<pre><code>node -v
 npm -v
-git -v
-</code></pre>
-<p>to confirm you successfully download node.js and Git.</p>
-<h2 id="addition-step"><a class="markdownIt-Anchor" href="#addition-step"></a> Addition Step</h2>
-<p>If you are in China, ‘cnpm’ should be faster than ‘npm’.</p>
+git -v</code></pre><p>to confirm you successfully download node.js and Git.</p>
+<h2 id="Addition-Step"><a href="#Addition-Step" class="headerlink" title="Addition Step"></a>Addition Step</h2><p>If you are in China, ‘cnpm’ should be faster than ‘npm’.</p>
 <p>Install cnpm and registry to TaoBao.</p>
-<pre class="highlight"><code class="">npm install -g cnpm --registry=https://registry.npm.taobao.org
-</code></pre>
-<p>Then, in the following context, replace ‘npm’ with ‘cnpm’</p>
-<hr />
-<h2 id="step-2-download-hexo-framework"><a class="markdownIt-Anchor" href="#step-2-download-hexo-framework"></a> Step 2: Download Hexo Framework</h2>
-<pre class="highlight"><code class="">npm install -g hexo-cli
-</code></pre>
-<p>After dowaload, you can use</p>
-<pre class="highlight"><code class="">hexo -v
-</code></pre>
-<p>to confirm.</p>
-<hr />
-<h2 id="step-3-create-a-blog"><a class="markdownIt-Anchor" href="#step-3-create-a-blog"></a> Step 3: Create a blog</h2>
-<p>Use</p>
-<pre class="highlight"><code class="">mkdir blog
-</code></pre>
-<p>to create a directory for you to write your blog.</p>
+<pre><code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></pre><p>Then, in the following context, replace ‘npm’ with ‘cnpm’</p>
+<hr>
+<h2 id="Step-2-Download-Hexo-Framework"><a href="#Step-2-Download-Hexo-Framework" class="headerlink" title="Step 2: Download Hexo Framework"></a>Step 2: Download Hexo Framework</h2><pre><code>npm install -g hexo-cli</code></pre><p>After dowaload, you can use</p>
+<pre><code>hexo -v</code></pre><p>to confirm.</p>
+<hr>
+<h2 id="Step-3-Create-a-blog"><a href="#Step-3-Create-a-blog" class="headerlink" title="Step 3: Create a blog"></a>Step 3: Create a blog</h2><p>Use</p>
+<pre><code>mkdir blog</code></pre><p>to create a directory for you to write your blog.</p>
 <p>In that directory, use</p>
-<pre class="highlight"><code class="">sudo hexo init
-</code></pre>
-<p>to create the blog.</p>
+<pre><code>sudo hexo init</code></pre><p>to create the blog.</p>
 <p>Congratulations! Your blog has been created. Then you can use</p>
-<pre class="highlight"><code class="">hexo s
-</code></pre>
-<p>to start running the hexo server. By default, you should be able to access your blog locally with “<a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a>”</p>
+<pre><code>hexo s</code></pre><p>to start running the hexo server. By default, you should be able to access your blog locally with “<a href="http://localhost:4000/&quot;" target="_blank" rel="noopener">http://localhost:4000/&quot;</a></p>
 <p>Basic hexo instructions can be found in your blog when you first create it. Here are some.</p>
-<pre class="highlight"><code class="">hexo n &quot;PUT THE NAME OF YOUR POST HERE&quot;  # to creat a new post
+<pre><code>hexo n &quot;PUT THE NAME OF YOUR POST HERE&quot;  # to creat a new post
 hexo clean  # to clean the blog
 hexo g  # to generate the blog with your post
 hexo s  # to run your blog locally
-hexo d  # to deploy your blog
-</code></pre>
-<p>The blog posts will be in MarkDown format.</p>
-<hr />
-<h2 id="step-4-deploy-your-blog"><a class="markdownIt-Anchor" href="#step-4-deploy-your-blog"></a> Step 4: Deploy your Blog</h2>
-<p>To run your blog remotely, you have to deploy your blog. Here, we will deploy it on your github.</p>
-<p>Create a new repository on Github. The Repository name has to be “<a href="http://YourID.github.io" target="_blank" rel="noopener">YourID.github.io</a>”!!</p>
+hexo d  # to deploy your blog</code></pre><p>The blog posts will be in MarkDown format.</p>
+<hr>
+<h2 id="Step-4-Deploy-your-Blog"><a href="#Step-4-Deploy-your-Blog" class="headerlink" title="Step 4: Deploy your Blog"></a>Step 4: Deploy your Blog</h2><p>To run your blog remotely, you have to deploy your blog. Here, we will deploy it on your github.</p>
+<p>Create a new repository on Github. The Repository name has to be “YourID.github.io”!!</p>
 <p>Use</p>
-<pre class="highlight"><code class="">npm install --save hexo-deployer-git
-</code></pre>
-<p>to download a plugin needed.</p>
+<pre><code>npm install --save hexo-deployer-git</code></pre><p>to download a plugin needed.</p>
 <p>After download, modify “_config.yml” file, “Deployment” section to</p>
-<pre class="highlight"><code class="">deploy:
+<pre><code>deploy:
   type: git
   repo: https://github.com/YourID/YourID.github.io.git
-  branch: master  # set the default branch.
-</code></pre>
-<p>The ‘branch’ is not necessary unless you want to use an alternative branch of your git project.</p>
+  branch: master  # set the default branch.</code></pre><p>The ‘branch’ is not necessary unless you want to use an alternative branch of your git project.</p>
 <p>Use the instuction</p>
-<pre class="highlight"><code class="">hexo d
-</code></pre>
-<p>to deploy the blog.</p>
-<p>It may ask you to fill in your github ID and password. Then use “<a href="https://YourID.github.io" target="_blank" rel="noopener">https://YourID.github.io</a>”, you should be able to access your blog remotely.</p>
-<hr />
-<h2 id="step-5-change-the-theme"><a class="markdownIt-Anchor" href="#step-5-change-the-theme"></a> Step 5: Change the Theme</h2>
-<p>First, you can find a hexo theme that you like, just google it.</p>
-<p>Here I will use mine as an example. I used hexo-theme-fluid. More details are in the github “<a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="noopener">https://github.com/fluid-dev/hexo-theme-fluid</a>”.</p>
+<pre><code>hexo d</code></pre><p>to deploy the blog.</p>
+<p>It may ask you to fill in your github ID and password. Then use “<a href="https://YourID.github.io&quot;" target="_blank" rel="noopener">https://YourID.github.io&quot;</a>, you should be able to access your blog remotely.</p>
+<hr>
+<h2 id="Step-5-Change-the-Theme"><a href="#Step-5-Change-the-Theme" class="headerlink" title="Step 5: Change the Theme"></a>Step 5: Change the Theme</h2><p>First, you can find a hexo theme that you like, just google it.</p>
+<p>Here I will use mine as an example. I used hexo-theme-fluid. More details are in the github “<a href="https://github.com/fluid-dev/hexo-theme-fluid&quot;" target="_blank" rel="noopener">https://github.com/fluid-dev/hexo-theme-fluid&quot;</a>.</p>
 <p>To use the theme, you should first download it or simply use</p>
-<pre class="highlight"><code class="">&quot;&quot;&quot;
-Change the link to your selected one, and the 'fluid' to the name you like.
+<pre><code>&quot;&quot;&quot;
+Change the link to your selected one, and the &#39;fluid&#39; to the name you like.
 Better to use the theme name
 &quot;&quot;&quot;
-git clone https://github.com/fluid-dev/hexo-theme-fluid themes/fluid
-</code></pre>
-<p>modify “_config.yml”, “Extensions” section. Change the theme name to your file name. In my case, it was</p>
-<pre class="highlight"><code class="">theme: fluid
-</code></pre>
-<p>Clean, generate and deploy it again. Then, the blog becomes the way you see now.</p>
+git clone https://github.com/fluid-dev/hexo-theme-fluid themes/fluid</code></pre><p>modify “_config.yml”, “Extensions” section. Change the theme name to your file name. In my case, it was</p>
+<pre><code>theme: fluid</code></pre><p>Clean, generate and deploy it again. Then, the blog becomes the way you see now.</p>
 <p>That is all. I am glad if you also manage to create one. Later, I will put more stuff on this website. May be my studies, my interests or even diaries. Hopefully, they will be helpful for you.</p>
 <p><em>Thank you! Wish you a great day!</em></p>
 
