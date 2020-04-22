@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.5k 字
+                    1.6k 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    30
+                    32
                      分钟
                   </span>
                 
@@ -278,11 +278,11 @@ It is clear that the result of the Bilinear interpolation is much smoother than 
 <hr />
 <h1 id="appendix-derivation-of-bilinear-interpolation"><a class="markdownIt-Anchor" href="#appendix-derivation-of-bilinear-interpolation"></a> Appendix - Derivation of Bilinear interpolation</h1>
 <p><img src="/images/Bilinear.png" srcset="/img/loading.gif" alt="Bilinear" /><br />
-Assumptions: The image is smooth in any directions; \(Q_{11}\), \(Q_{12}\), \(Q_{21}\), \(Q_{22}\), \(R_1\), \(R_2\) and \(p\) are close enough.</p>
+Assumptions: The image is smooth in any directions; \(Q_{11}\), \(Q_{12}\), \(Q_{21}\), \(Q_{22}\), \(R_1\), \(R_2\) are all close enough to point \(p\), \((x, y)\).</p>
 <p>Follow by the assumptions, we have<br />
 \[<br />
-f(R_1) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1);<br />
-f(R_2) = f§ + \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y_2-y).<br />
+f(R_1) = f(x, y) - \frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y-y_1);<br />
+f(R_2) = f(x, y) + \frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y_2-y).<br />
 \]<br />
 Then,<br />
 \[<br />
@@ -293,42 +293,42 @@ f(Q_{12}) = f(R_2) - \frac{\partial f(R_2)}{\partial x}\Bigr\rvert_{y_2} (x-x_1)
 \]<br />
 Substituting \(f(R_1)\) and \(f(R_2)\) into the equations, we find that<br />
 \[<br />
-f(Q_{11}) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x-x_1) + \frac{\partial^2 f§}{\partial x \partial y}\Bigr\rvert_{y_1} (x-x_1) (y-y_1),<br />
+f(Q_{11}) = f(x, y) - \frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y-y_1) - \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_1} (x-x_1) + \frac{\partial^2 f(x, y)}{\partial x \partial y}\Bigr\rvert_{y_1} (x-x_1) (y-y_1),<br />
 \]<br />
 the last term equals \(0\) as the function is evaluated at \(y=y_1\). Therefore, we have<br />
 \[<br />
-f(Q_{11}) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x-x_1);<br />
+f(Q_{11}) = f(x, y) - \frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y-y_1) - \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_1} (x-x_1);<br />
 \]<br />
 \[<br />
-f(Q_{21}) = f§ - \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) + \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x_2-x);<br />
+f(Q_{21}) = f(x, y) - \frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y-y_1) + \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_1} (x_2-x);<br />
 \]<br />
 \[<br />
-f(Q_{12}) = f§ + \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y_2-y) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x-x_1);<br />
+f(Q_{12}) = f(x, y) + \frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y_2-y) - \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_2} (x-x_1);<br />
 \]<br />
 \[<br />
-f(Q_{22}) = f§ + \frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y_2-y) + \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x_2-x).<br />
+f(Q_{22}) = f(x, y) + \frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y_2-y) + \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_2} (x_2-x).<br />
 \]</p>
 <p>By rearranging the equations, we can find that<br />
 \[<br />
-\frac{\partial f§}{\partial y}\Bigr\rvert_{x} (y-y_1) = f§ - f(Q_{11}) - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x-x_1) = f§ - f(Q_{21}) + \frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} (x_2-x);<br />
+\frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} (y-y_1) = f(x, y) - f(Q_{11}) - \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_1} (x-x_1) = f(x, y) - f(Q_{21}) + \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_1} (x_2-x);<br />
 \]<br />
 \[<br />
-\frac{\partial f§}{\partial y}\Bigr\rvert_{x}(y_2-y) = f(Q_{12}) - f§ +  \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x-x_1) = f(Q_{22}) - f§ - \frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} (x_2-x).<br />
+\frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x}(y_2-y) = f(Q_{12}) - f(x, y) +  \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_2} (x-x_1) = f(Q_{22}) - f(x, y) - \frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_2} (x_2-x).<br />
 \]<br />
 Then,<br />
 \[<br />
-\frac{\partial f§}{\partial x}\Bigr\rvert_{y_1} = \frac{f(Q_{21}) - f(Q_{11})}{x_2-x_1};<br />
+\frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_1} = \frac{f(Q_{21}) - f(Q_{11})}{x_2-x_1};<br />
 \]<br />
 \[<br />
-\frac{\partial f§}{\partial x}\Bigr\rvert_{y_2} = \frac{f(Q_{22}) - f(Q_{12})}{x_2-x_1}.<br />
+\frac{\partial f(x, y)}{\partial x}\Bigr\rvert_{y_2} = \frac{f(Q_{22}) - f(Q_{12})}{x_2-x_1}.<br />
 \]</p>
-<p>Substituting the above equations back, we can fine \(\frac{\partial f§}{\partial y}\Bigr\rvert_{x}\) as<br />
+<p>Substituting the above equations back, we can fine \(\frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x}\) as<br />
 \[<br />
-\frac{\partial f§}{\partial y}\Bigr\rvert_{x} = \frac{f§ - f(Q_{11})}{y-y_1} - \frac{x-x_1}{y-y_1}\frac{f(Q_{21}) - f(Q_{11})}{x_2-x_1} = \frac{f(Q_{12}) - f§}{y_2-y} - \frac{x-x_1}{y_2-y}\frac{f(Q_{22}) - f(Q_{12})}{x_2-x_1}.<br />
+\frac{\partial f(x, y)}{\partial y}\Bigr\rvert_{x} = \frac{f(x, y) - f(Q_{11})}{y-y_1} - \frac{x-x_1}{y-y_1}\frac{f(Q_{21}) - f(Q_{11})}{x_2-x_1} = \frac{f(Q_{12}) - f(x, y)}{y_2-y} - \frac{x-x_1}{y_2-y}\frac{f(Q_{22}) - f(Q_{12})}{x_2-x_1}.<br />
 \]</p>
-<h2 id="rearrange-to-get-f-finally-we-have-the-bilinear-relation-that-we-wantf-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22"><a class="markdownIt-Anchor" href="#rearrange-to-get-f-finally-we-have-the-bilinear-relation-that-we-wantf-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22"></a> Rearrange to get \(f§\). Finally, we have the <strong>Bilinear relation</strong> that we want.<br />
+<h2 id="rearrange-to-get-fx-y-finally-we-have-the-bilinear-relation-that-we-wantfx-y-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22"><a class="markdownIt-Anchor" href="#rearrange-to-get-fx-y-finally-we-have-the-bilinear-relation-that-we-wantfx-y-fracx_2-xy_2-yx_2-x_1y_2-y_1fq_11-fracx-x_1y_2-yx_2-x_1y_2-y_1fq_21-fracx_2-xy-y_1x_2-x_1y_2-y_1fq_12-fracx-x_1y-y_1x_2-x_1y_2-y_1fq_22"></a> Rearrange to get \(f(x, y)\). Finally, we have the <strong>Bilinear relation</strong> that we want.<br />
 \[<br />
-f§ = \frac{(x_2 - x)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{11}) + \frac{(x - x_1)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{21}) + \frac{(x_2 - x)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{12}) + \frac{(x - x_1)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{22}).<br />
+f(x, y) = \frac{(x_2 - x)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{11}) + \frac{(x - x_1)(y_2-y)}{(x_2 - x_1)(y_2-y_1)}f(Q_{21}) + \frac{(x_2 - x)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{12}) + \frac{(x - x_1)(y-y_1)}{(x_2 - x_1)(y_2-y_1)}f(Q_{22}).<br />
 \]</h2>
 <h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
 <p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
