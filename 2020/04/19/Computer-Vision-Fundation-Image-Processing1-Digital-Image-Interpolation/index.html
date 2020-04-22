@@ -199,7 +199,7 @@
 <p><em>Note</em> that, normally, <strong>INTER_AREA</strong> is used when scaling down the image. Otherwise, <strong>INTER_CUBIC</strong> and <strong>INTER_LINEAR</strong> are good choices. But <strong>INTER_CUBIC</strong> is a bit slow.</p>
 <h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import cv2
 
-img = cv2.imread(image_name, cv2.IMREAD_UNCHANGED)
+img = cv2.imread(image_name, cv2.IMREAD_UNCHANGED)  # replace with your image_name
 scale_percent = 5       # percent of original size
 width = int(img.shape[1] * scale_percent / 100)
 height = int(img.shape[0] * scale_percent / 100)
