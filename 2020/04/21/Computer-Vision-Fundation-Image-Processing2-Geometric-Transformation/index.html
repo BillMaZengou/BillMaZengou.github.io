@@ -186,39 +186,103 @@
 <li>Build <em>Translation</em> and <em>Rotation</em> Function From Scratch</li>
 <li>(Option) Other Transformation Functions</li>
 </ol>
-<h2 id="Source-code-https-github-com-BillMaZengou-cv-basis-gt-transform-image-py-OpenCV"><a href="#Source-code-https-github-com-BillMaZengou-cv-basis-gt-transform-image-py-OpenCV" class="headerlink" title="Source code: https://github.com/BillMaZengou/cv_basis -&gt; transform_image.py (OpenCV)"></a>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; transform_image.py (OpenCV)</h2><h1 id="Principle-of-Transformation"><a href="#Principle-of-Transformation" class="headerlink" title="Principle of Transformation"></a>Principle of Transformation</h1><h3 id="Mathematics"><a href="#Mathematics" class="headerlink" title="Mathematics"></a>Mathematics</h3><p>In general, a transformation of a point \(\mathbf{p}\), \(\begin{pmatrix} v &amp; w \end{pmatrix}\) to another point \(\mathbf{q}\), \(\begin{pmatrix} x &amp; y \end{pmatrix}\) is given by<br>\[\mathbf{q} = \mathbf{R}\mathbf{p} + \mathbf{T}.\]<br>Explicitly,<br>\[<br>\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} \omega_1 &amp; \omega_2 \\ \omega_3 &amp; \omega_4 \end{bmatrix} \begin{bmatrix} v \\ w \end{bmatrix} + \begin{bmatrix} t_1 \\ t_2 \end{bmatrix}.<br>\]<br>where the \(\mathbf{R}\) and \(\mathbf{T}\) denote rotation and translation matrices respectively.</p>
-<p>To make the expression more compact, we can write it as<br>\[<br>\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} \omega_1 &amp; \omega_2 &amp; t_1\\ \omega_3 &amp; \omega_4 &amp; t_2 \end{bmatrix} \begin{bmatrix} v \\ w \\ 1 \end{bmatrix}.<br>\]</p>
+<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; transform_image.py (OpenCV)</p>
+<hr />
+<h1 id="principle-of-transformation"><a class="markdownIt-Anchor" href="#principle-of-transformation"></a> Principle of Transformation</h1>
+<h3 id="mathematics"><a class="markdownIt-Anchor" href="#mathematics"></a> Mathematics</h3>
+<p>In general, a transformation of a point \(\mathbf{p}\), \(\begin{pmatrix} v &amp; w \end{pmatrix}\) to another point \(\mathbf{q}\), \(\begin{pmatrix} x &amp; y \end{pmatrix}\) is given by<br />
+\[\mathbf{q} = \mathbf{R}\mathbf{p} + \mathbf{T}.\]<br />
+Explicitly,<br />
+\[<br />
+\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} \omega_1 &amp; \omega_2 \\ \omega_3 &amp; \omega_4 \end{bmatrix} \begin{bmatrix} v \\ w \end{bmatrix} + \begin{bmatrix} t_1 \\ t_2 \end{bmatrix}.<br />
+\]<br />
+where the \(\mathbf{R}\) and \(\mathbf{T}\) denote rotation and translation matrices respectively.</p>
+<p>To make the expression more compact, we can write it as<br />
+\[<br />
+\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} \omega_1 &amp; \omega_2 &amp; t_1\\ \omega_3 &amp; \omega_4 &amp; t_2 \end{bmatrix} \begin{bmatrix} v \\ w \\ 1 \end{bmatrix}.<br />
+\]</p>
 <p>A quick method to determine the transformation matrix is to consider the changes of unit vectors \(\hat{i}\) and \(\hat{j}\).</p>
-<p>For example, if the \(\mathbf{R}\) is an identity matrix and \(\mathbf{T} = \mathbf{0}\) (i.e. no transformation), then the equation is<br>\[<br>\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} v \\ w \end{bmatrix}.<br>\]<br>Another way to look at this equation is<br>\[<br>\begin{bmatrix} x \\ y \end{bmatrix} = v \begin{bmatrix} 1 \\ 0 \end{bmatrix} + w \begin{bmatrix} 0 \\ 1 \end{bmatrix},<br>\]<br>which means that \(v\) and \(w\) are values to scale up the unit vectors \(\hat{i}\) and \(\hat{j}\). Therefore, any transformation of the vector \(\begin{bmatrix} v \\ w \end{bmatrix}\) can be regards as the transformation of the entire vector space formed by \(\hat{i}\) and \(\hat{j}\).</p>
-<p><img src="rotation.png" srcset="/img/loading.gif" alt="rotation"><br>Take rotation as an example, if \(\hat{i}\) and \(\hat{j}\) are rotated anti-clockwise by an angle \(\theta\), then \(\hat{i}\) becomes \(\begin{bmatrix} cos(\theta) \\ sin(\theta) \end{bmatrix}\) and \(\hat{j}\) becomes \(\begin{bmatrix} -sin(\theta) \\ cos(\theta) \end{bmatrix}\). Thus, the equation is<br>\[<br>\begin{bmatrix} x \\ y \end{bmatrix} = v \begin{bmatrix} cos(\theta) \\ sin(\theta) \end{bmatrix} + w \begin{bmatrix} -sin(\theta) \\ cos(\theta) \end{bmatrix}.<br>\]<br>Therefore, in the general equation, we should use the matrix<br>\[ \begin{bmatrix} \cos(\theta) &amp; -sin(\theta) &amp; 0\\ sin(\theta) &amp; cos(\theta) &amp; 0 \end{bmatrix}. \]<br>Other transformation matrix can be obtained in the same manner.</p>
-<h3 id="Computation"><a href="#Computation" class="headerlink" title="Computation"></a>Computation</h3><p>Except the expression in <strong>Mathematics</strong>, sometimes square matrix can be used.<br>\[<br>\begin{bmatrix} x \\ y \\ 1\end{bmatrix} = \begin{bmatrix} \omega_1 &amp; \omega_2 &amp; t_1\\ \omega_3 &amp; \omega_4 &amp; t_2 \\ 0 &amp; 0 &amp; 1\end{bmatrix} \begin{bmatrix} v \\ w \\ 1\end{bmatrix},<br>\]<br>or if row vectors are used<br>\[<br>\begin{bmatrix} x &amp; y &amp; 1\end{bmatrix} = \begin{bmatrix} v &amp; w &amp; 1\end{bmatrix} \begin{bmatrix} \omega_1 &amp; \omega_3 &amp; 0\\ \omega_2 &amp; \omega_4 &amp; 0 \\ t_1 &amp; t_2 &amp; 1\end{bmatrix}.<br>\]<br>The matrix should be obtained using the same manner discussed in last section.</p>
-<p>One issue to consider when processing images in computer is that the origin of the image does not locate at the centre of the image, but at the top-left corner. It works for translation and resizing. But converting to Cartesian coordinates is necessary before rotation or shearing.<br><img src="coordinate.png" srcset="/img/loading.gif" alt="coordinate"></p>
+<p>For example, if the \(\mathbf{R}\) is an identity matrix and \(\mathbf{T} = \mathbf{0}\) (i.e. no transformation), then the equation is<br />
+\[<br />
+\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} v \\ w \end{bmatrix}.<br />
+\]<br />
+Another way to look at this equation is<br />
+\[<br />
+\begin{bmatrix} x \\ y \end{bmatrix} = v \begin{bmatrix} 1 \\ 0 \end{bmatrix} + w \begin{bmatrix} 0 \\ 1 \end{bmatrix},<br />
+\]<br />
+which means that \(v\) and \(w\) are values to scale up the unit vectors \(\hat{i}\) and \(\hat{j}\). Therefore, any transformation of the vector \(\begin{bmatrix} v \\ w \end{bmatrix}\) can be regards as the transformation of the entire vector space formed by \(\hat{i}\) and \(\hat{j}\).</p>
+<p><img src="rotation.png" srcset="/img/loading.gif" alt="rotation" /><br />
+Take rotation as an example, if \(\hat{i}\) and \(\hat{j}\) are rotated anti-clockwise by an angle \(\theta\), then \(\hat{i}\) becomes \(\begin{bmatrix} cos(\theta) \\ sin(\theta) \end{bmatrix}\) and \(\hat{j}\) becomes \(\begin{bmatrix} -sin(\theta) \\ cos(\theta) \end{bmatrix}\). Thus, the equation is<br />
+\[<br />
+\begin{bmatrix} x \\ y \end{bmatrix} = v \begin{bmatrix} cos(\theta) \\ sin(\theta) \end{bmatrix} + w \begin{bmatrix} -sin(\theta) \\ cos(\theta) \end{bmatrix}.<br />
+\]<br />
+Therefore, in the general equation, we should use the matrix<br />
+\[ \begin{bmatrix} \cos(\theta) &amp; -sin(\theta) &amp; 0\\ sin(\theta) &amp; cos(\theta) &amp; 0 \end{bmatrix}. \]<br />
+Other transformation matrix can be obtained in the same manner.</p>
+<h3 id="computation"><a class="markdownIt-Anchor" href="#computation"></a> Computation</h3>
+<p>Except the expression in <strong>Mathematics</strong>, sometimes square matrix can be used.<br />
+\[<br />
+\begin{bmatrix} x \\ y \\ 1\end{bmatrix} = \begin{bmatrix} \omega_1 &amp; \omega_2 &amp; t_1\\ \omega_3 &amp; \omega_4 &amp; t_2 \\ 0 &amp; 0 &amp; 1\end{bmatrix} \begin{bmatrix} v \\ w \\ 1\end{bmatrix},<br />
+\]<br />
+or if row vectors are used<br />
+\[<br />
+\begin{bmatrix} x &amp; y &amp; 1\end{bmatrix} = \begin{bmatrix} v &amp; w &amp; 1\end{bmatrix} \begin{bmatrix} \omega_1 &amp; \omega_3 &amp; 0\\ \omega_2 &amp; \omega_4 &amp; 0 \\ t_1 &amp; t_2 &amp; 1\end{bmatrix}.<br />
+\]<br />
+The matrix should be obtained using the same manner discussed in last section.</p>
+<p>One issue to consider when processing images in computer is that the origin of the image does not locate at the centre of the image, but at the top-left corner. It works for translation and resizing. But converting to Cartesian coordinates is necessary before rotation or shearing.<br />
+<img src="coordinate.png" srcset="/img/loading.gif" alt="coordinate" /></p>
 <p>Therefore, rotation or shearing requires three steps:</p>
 <ol>
 <li>Convert from image coordinates to Cartesian coordinates</li>
 <li>Perform rotation or shearing</li>
 <li>Convert the results back to image coordinates</li>
 </ol>
-<p>It is not hard to realise that for a \((M \times N)\) matrix, the origin of the image space locates at \(-\frac{N}{2}, \frac{M}{2}\). Thus, the transformation can be calculated from<br>\[<br>\begin{bmatrix} x &amp; y &amp; 1\end{bmatrix} = \begin{bmatrix} v &amp; w &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; -1 &amp; 0 \\ -0.5N &amp; 0.5M &amp; 1 \end{bmatrix} \begin{bmatrix} \mathbf{R}^T &amp; \mathbf{0} \\ \mathbf{T}^T &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; -1 &amp; 0 \\ 0.5N &amp; 0.5M &amp; 1 \end{bmatrix}.<br>\]</p>
-<h4 id="Aside"><a href="#Aside" class="headerlink" title="Aside"></a>Aside</h4><p>One technical nuance that we need to consider is whether forward or backward mapping should be used after transformation. Intuitively, forward mapping is the procedure to obtain the transformed images. However, couple of problems can occur.<br><img src="forward_mapping.png" srcset="/img/loading.gif" alt="forward"></p>
+<p>It is not hard to realise that for a \((M \times N)\) matrix, the origin of the image space locates at \(-\frac{N}{2}, \frac{M}{2}\). Thus, the transformation can be calculated from<br />
+\[<br />
+\begin{bmatrix} x &amp; y &amp; 1\end{bmatrix} = \begin{bmatrix} v &amp; w &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; -1 &amp; 0 \\ -0.5N &amp; 0.5M &amp; 1 \end{bmatrix} \begin{bmatrix} \mathbf{R}^T &amp; \mathbf{0} \\ \mathbf{T}^T &amp; 1 \end{bmatrix} \begin{bmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; -1 &amp; 0 \\ 0.5N &amp; 0.5M &amp; 1 \end{bmatrix}.<br />
+\]</p>
+<h4 id="aside"><a class="markdownIt-Anchor" href="#aside"></a> Aside</h4>
+<p>One technical nuance that we need to consider is whether forward or backward mapping should be used after transformation. Intuitively, forward mapping is the procedure to obtain the transformed images. However, couple of problems can occur.<br />
+<img src="forward_mapping.png" srcset="/img/loading.gif" alt="forward" /></p>
 <ol>
 <li>It can result pixels outside the image boundary.</li>
 <li>Complex transforms can map several input pixels to the same output pixel.</li>
 <li>The pixel value of the output pixel cannot be obtained simply. As shown in the diagram, the pixel value of the mapped pixel should be interpolated from nearby pixels. Thus, all the mapped pixels have to be computed first.</li>
 </ol>
-<p>Backward mapping, on the other side, find the corresponding point of the mapped pixel on the original image.<br><img src="backward_mapping.png" srcset="/img/loading.gif" alt="backward"><br>Then, the pixel value can be calculated using the nearby pixels on the original image. Therefore, it costs less computationally.</p>
+<p>Backward mapping, on the other side, find the corresponding point of the mapped pixel on the original image.<br />
+<img src="backward_mapping.png" srcset="/img/loading.gif" alt="backward" /><br />
+Then, the pixel value can be calculated using the nearby pixels on the original image. Therefore, it costs less computationally.</p>
 <p>As we need to interpolate the pixel values, An interpolation mechanism needs selecting. Normally, bilinear interpolation is preferred. OpenCV uses bilinear interpolation as well.</p>
-<hr>
-<h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><h4 id="General-Transformation-Method-Affine-Transformation"><a href="#General-Transformation-Method-Affine-Transformation" class="headerlink" title="General Transformation Method (Affine Transformation)"></a>General Transformation Method (Affine Transformation)</h4><pre><code>dst = cv2.warpAffine(src, M, dsize[, dst[, flags[, borderMode[, borderValue]]]])</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image.<br><strong>dst</strong> -&gt; Destination image.<br><strong>M</strong> -&gt; (compulsory) \((2 \times 3)\) transformation matrix.<br><strong>dsize</strong> -&gt; (compulsory) Destination image size.<br><strong>flages</strong> -&gt; (optional) Combination of interpolation methods (Conduct the last post <em>Resize</em>). <strong>INTER_LINEAR</strong> is used by <em>default</em><br><em>-Addition-</em><br><strong>borderMode</strong> and <strong>borderValue</strong> take care of the border of the destination image. For example, if <strong>borderMode=BORDER_TRANSPARENT</strong>, then the pixels in the destination image corresponding to the “outliers” in the source image are not modified by the function.</p>
+<hr />
+<h1 id="practice-with-opencv-in-python"><a class="markdownIt-Anchor" href="#practice-with-opencv-in-python"></a> Practice with OpenCV in Python</h1>
+<h3 id="documentation"><a class="markdownIt-Anchor" href="#documentation"></a> Documentation</h3>
+<h4 id="general-transformation-method-affine-transformation"><a class="markdownIt-Anchor" href="#general-transformation-method-affine-transformation"></a> General Transformation Method (Affine Transformation)</h4>
+<pre class="highlight"><code class="">dst = cv2.warpAffine(src, M, dsize[, dst[, flags[, borderMode[, borderValue]]]])
+</code></pre>
+<p><strong>src</strong> -&gt; (compulsory) Source image.<br />
+<strong>dst</strong> -&gt; Destination image.<br />
+<strong>M</strong> -&gt; (compulsory) \((2 \times 3)\) transformation matrix.<br />
+<strong>dsize</strong> -&gt; (compulsory) Destination image size.<br />
+<strong>flages</strong> -&gt; (optional) Combination of interpolation methods (Conduct the last post <em>Resize</em>). <strong>INTER_LINEAR</strong> is used by <em>default</em><br />
+<em>-Addition-</em><br />
+<strong>borderMode</strong> and <strong>borderValue</strong> take care of the border of the destination image. For example, if <strong>borderMode=BORDER_TRANSPARENT</strong>, then the pixels in the destination image corresponding to the “outliers” in the source image are not modified by the function.</p>
 <p><em>Note</em> Unlike what I stated in <strong>Computation</strong>, <strong>M</strong> in this function is a \((2 \times 3)\) matrix as stated in <strong>Mathematics</strong>.</p>
-<h4 id="Rotation-Matrix"><a href="#Rotation-Matrix" class="headerlink" title="Rotation Matrix"></a>Rotation Matrix</h4><p>As mentioned in <strong>Computation</strong>, for rotation and shearing, we need to convert the coordinate system first. In OpenCV, for rotation, this can easily be done using <code>getRotationMatrix2D</code>.</p>
-<pre><code>R = cv2.getRotationMatrix2D(center, angle, scale)</code></pre><p><strong>center</strong> -&gt; (compulsory) Center of the rotation in the source image.<br><strong>angle</strong> -&gt; (compulsory) Rotation angle in <em>degrees</em>. Positive values mean anti-clockwise rotation (the coordinate origin is assumed to be the top-left corner).<br><strong>scale</strong> -&gt; (compulsory) Isotropic scale factor.<br>This will give the rotation matrix \(\mathbf{R}\), which can then be used in <code>warpAffine</code>. As shown in <strong>Computation</strong>, to convert the coordinate system to Cartesian, the <code>center=(cols/2, rows/2)</code>, where <code>cols</code> and <code>rows</code> can be obtained from <code>image.shape</code></p>
-<h4 id="Shearing-Matrix"><a href="#Shearing-Matrix" class="headerlink" title="Shearing Matrix"></a>Shearing Matrix</h4><p>To implement the shearing operation, we have to construct the matrix ourselves with the procedure stated in <strong>Computation</strong>. Notice that truncated and transverse matrix should be constructed to match OpenCV convention. Details in example code.</p>
-<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import numpy as np
+<h4 id="rotation-matrix"><a class="markdownIt-Anchor" href="#rotation-matrix"></a> Rotation Matrix</h4>
+<p>As mentioned in <strong>Computation</strong>, for rotation and shearing, we need to convert the coordinate system first. In OpenCV, for rotation, this can easily be done using <code>getRotationMatrix2D</code>.</p>
+<pre class="highlight"><code class="">R = cv2.getRotationMatrix2D(center, angle, scale)
+</code></pre>
+<p><strong>center</strong> -&gt; (compulsory) Center of the rotation in the source image.<br />
+<strong>angle</strong> -&gt; (compulsory) Rotation angle in <em>degrees</em>. Positive values mean anti-clockwise rotation (the coordinate origin is assumed to be the top-left corner).<br />
+<strong>scale</strong> -&gt; (compulsory) Isotropic scale factor.<br />
+This will give the rotation matrix \(\mathbf{R}\), which can then be used in <code>warpAffine</code>. As shown in <strong>Computation</strong>, to convert the coordinate system to Cartesian, the <code>center=(cols/2, rows/2)</code>, where <code>cols</code> and <code>rows</code> can be obtained from <code>image.shape</code></p>
+<h4 id="shearing-matrix"><a class="markdownIt-Anchor" href="#shearing-matrix"></a> Shearing Matrix</h4>
+<p>To implement the shearing operation, we have to construct the matrix ourselves with the procedure stated in <strong>Computation</strong>. Notice that truncated and transverse matrix should be constructed to match OpenCV convention. Details in example code.</p>
+<h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
+<pre class="highlight"><code class="">import numpy as np
 import cv2
 
 name = image_name
-img = cv2.imread(&#39;./{}.jpg&#39;.format(name), cv2.IMREAD_UNCHANGED)
+img = cv2.imread('./{}.jpg'.format(name), cv2.IMREAD_UNCHANGED)
 rows, cols, _ = img.shape
 
 # Translation
@@ -243,32 +307,43 @@ cv2.imshow(&quot;Translated image&quot;, translated)
 cv2.imshow(&quot;Rotated image&quot;, rotated)
 cv2.imshow(&quot;Sheared image&quot;, sheared)
 
-# Press &#39;s&#39; for saving the image
+# Press 's' for saving the image
 k = cv2.waitKey(0)
 if k == 27:         # wait for ESC key to exit
     cv2.destroyAllWindows()
-elif k == ord(&#39;s&#39;): # wait for &#39;s&#39; key to save and exit
+elif k == ord('s'): # wait for 's' key to save and exit
     cv2.imwrite(&quot;Translated.jpg&quot;,translated)
     cv2.imwrite(&quot;Rotated.jpg&quot;,rotated)
     cv2.imwrite(&quot;Sheared.jpg&quot;,sheared)
-    cv2.destroyAllWindows()</code></pre><p>Example results are shown below:<br><strong>The original image</strong> (From last post)<br><img src="flower_Resized_image.jpg" srcset="/img/loading.gif" alt="small"></p>
-<p><strong>Translation</strong><br><img src="flower_Translated.jpg" srcset="/img/loading.gif" alt="t"></p>
-<p><strong>Rotation</strong><br><img src="flower_Rotated.jpg" srcset="/img/loading.gif" alt="r"></p>
-<p><strong>Shearing</strong><br><img src="flower_Sheared.jpg" srcset="/img/loading.gif" alt="s"></p>
-<hr>
-<h1 id="Build-Each-Transformation-Function-From-Scratch-TODO"><a href="#Build-Each-Transformation-Function-From-Scratch-TODO" class="headerlink" title="Build Each Transformation Function From Scratch (TODO)"></a>Build Each Transformation Function From Scratch (TODO)</h1><p>Shearing function has already been built in the last section.</p>
-<hr>
-<h1 id="Option-Other-Transformation-Functions-TODO"><a href="#Option-Other-Transformation-Functions-TODO" class="headerlink" title="(Option) Other Transformation Functions (TODO)"></a>(Option) Other Transformation Functions (TODO)</h1><hr>
-<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
-<hr>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
-<li>Reed, N., 2020. Rotations And Infinitesimal Generators – Nathan Reed’S Coding Blog. [online] Reedbeta.com. Available at: <a href="http://reedbeta.com/blog/rotations-and-infinitesimal-generators/" target="_blank" rel="noopener">http://reedbeta.com/blog/rotations-and-infinitesimal-generators/</a> [Accessed 22 April 2020].</li>
-<li>Lohninger, H., 2020. Java Programming Course - Coordinates. [online] Vias.org. Available at: <a href="http://www.vias.org/javacourse/chap04_10.html" target="_blank" rel="noopener">http://www.vias.org/javacourse/chap04_10.html</a> [Accessed 22 April 2020].</li>
-<li>Blog.csdn.net. 2020. 图像变换——向前映射和向后映射_人工智能_薇洛的打火机-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/glorydream2015/article/details/44873703" target="_blank" rel="noopener">https://blog.csdn.net/glorydream2015/article/details/44873703</a> [Accessed 22 April 2020].</li>
-<li>Engr.case.edu. 2020. [online] Available at: <a href="http://engr.case.edu/merat_francis/eecs490f07/lectures/lecture4.pdf" target="_blank" rel="noopener">http://engr.case.edu/merat_francis/eecs490f07/lectures/lecture4.pdf</a> [Accessed 22 April 2020].</li>
-<li>Docs.opencv.org. 2020. Geometric Image Transformations — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html?highlight=warpaffine" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html?highlight=warpaffine</a> [Accessed 22 April 2020].</li>
+    cv2.destroyAllWindows()
+</code></pre>
+<p>Example results are shown below:<br />
+<strong>The original image</strong> (From last post)<br />
+<img src="flower_Resized_image.jpg" srcset="/img/loading.gif" alt="small" /></p>
+<p><strong>Translation</strong><br />
+<img src="flower_Translated.jpg" srcset="/img/loading.gif" alt="t" /></p>
+<p><strong>Rotation</strong><br />
+<img src="flower_Rotated.jpg" srcset="/img/loading.gif" alt="r" /></p>
+<p><strong>Shearing</strong><br />
+<img src="flower_Sheared.jpg" srcset="/img/loading.gif" alt="s" /></p>
+<hr />
+<h1 id="build-each-transformation-function-from-scratch-todo"><a class="markdownIt-Anchor" href="#build-each-transformation-function-from-scratch-todo"></a> Build Each Transformation Function From Scratch (TODO)</h1>
+<p>Shearing function has already been built in the last section.</p>
+<hr />
+<h1 id="option-other-transformation-functions-todo"><a class="markdownIt-Anchor" href="#option-other-transformation-functions-todo"></a> (Option) Other Transformation Functions (TODO)</h1>
+<hr />
+<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
+<p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr />
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
+<ol>
+<li>Reed, N., 2020. Rotations And Infinitesimal Generators – Nathan Reed’S Coding Blog. [online] <a href="http://Reedbeta.com" target="_blank" rel="noopener">Reedbeta.com</a>. Available at: <a href="http://reedbeta.com/blog/rotations-and-infinitesimal-generators/" target="_blank" rel="noopener">http://reedbeta.com/blog/rotations-and-infinitesimal-generators/</a> [Accessed 22 April 2020].</li>
+<li>Lohninger, H., 2020. Java Programming Course - Coordinates. [online] <a href="http://Vias.org" target="_blank" rel="noopener">Vias.org</a>. Available at: <a href="http://www.vias.org/javacourse/chap04_10.html" target="_blank" rel="noopener">http://www.vias.org/javacourse/chap04_10.html</a> [Accessed 22 April 2020].</li>
+<li><a href="http://Blog.csdn.net" target="_blank" rel="noopener">Blog.csdn.net</a>. 2020. 图像变换——向前映射和向后映射_人工智能_薇洛的打火机-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/glorydream2015/article/details/44873703" target="_blank" rel="noopener">https://blog.csdn.net/glorydream2015/article/details/44873703</a> [Accessed 22 April 2020].</li>
+<li><a href="http://Engr.case.edu" target="_blank" rel="noopener">Engr.case.edu</a>. 2020. [online] Available at: <a href="http://engr.case.edu/merat_francis/eecs490f07/lectures/lecture4.pdf" target="_blank" rel="noopener">http://engr.case.edu/merat_francis/eecs490f07/lectures/lecture4.pdf</a> [Accessed 22 April 2020].</li>
+<li><a href="http://Docs.opencv.org" target="_blank" rel="noopener">Docs.opencv.org</a>. 2020. Geometric Image Transformations — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html?highlight=warpaffine" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html?highlight=warpaffine</a> [Accessed 22 April 2020].</li>
 </ol>
-<hr>
+<hr />
 
             </article>
             <hr>
