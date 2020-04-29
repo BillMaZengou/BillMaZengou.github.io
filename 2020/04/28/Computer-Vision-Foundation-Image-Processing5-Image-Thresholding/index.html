@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
+  <meta name="author" content="Zengou Ma">
+  <meta name="keywords" content="">
+  <title>Computer Vision Foundation -&gt; Image Processing5: Image Thresholding - Bill Ma&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_9n5xqdrq0nc.css">
+
+
+
+  <link  rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css" />
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Bill Ma's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2020-04-28 13:44">
+                    星期二, 四月 28日 2020, 1:44 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.3k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    24
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>In this post, another basic image operation is explored - Colour conversion.</p>
+<p>This post is split into four sections:</p>
+<ol>
+<li>The Basic Principles of Image Thresholding</li>
+<li>Practice with OpenCV in Python</li>
+<li>Compute Otsu’s Algorithm From Scratch</li>
+</ol>
+<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; threshold.py (OpenCV)</p>
+<hr>
+<h1 id="The-Basic-Principles-of-Image-Thresholding"><a href="#The-Basic-Principles-of-Image-Thresholding" class="headerlink" title="The Basic Principles of Image Thresholding"></a>The Basic Principles of Image Thresholding</h1><p>Image Thresholding is the simplest segmentation method. This separation is based on the variation of intensity between the object pixels and the background pixels.</p>
+<p>To do that, we compare each pixel value with respect to a set <em>threshold</em>. If one pixel is above the threshold, we can assign a value, otherwise we can assign another value. (e.g. \(255\) if it is above the threshold, \(0\) otherwise)</p>
+<p>However, manually selecting the threshold can be problematic and requires many times of trail-and-error. A useful method is the Otsu Thresholding.</p>
+<p>Otsu’s method was named after its inventor Nobuyuki Otsu. Otsu’s thresholding method involves iterating through all the possible threshold values (\(0\) to \(255\)) and calculating a measure of spread for the pixel levels each side of the threshold. The main purpose is to separate all the pixels into foreground and background, and find the threshold value where the sum of foreground and background spreads is at its minimum. Statistically, the spread is measured by the variance.</p>
+<p>The next step is to calculate the <em>‘Within-Class Variance’</em>. This is simply the sum of the two variances multiplied by their associated weights. Mathematically,<br>\[<br>  \sigma^2 = W_b \sigma^2_b + W_f \sigma^2_f,<br>\]<br>where \(W_b\) and \(W_f\) denote the weights of background and foreground pixels respectively. Besides,<br>\[<br>  W_b + W_f = 1<br>\]<br>as normal.</p>
+<p>Here is an example. The set-up is shown below.<br><img src="otsuOrig.png" srcset="/img/loading.gif" alt="otsu_eg"><br>Then, we can use Otsu’s method and obtain that when the threshold is at \(3\), the <em>‘Within-Class Variance’</em> is at its minimum.<br><img src="otsu_process.png" srcset="/img/loading.gif" alt="otsu_pro"></p>
+<p>The problems of this approach are that the result highly related to the light conditions, and it works only if there are two distinct peaks in the histogram of the image theoretically. If the ambient light does not shine uniformly, this method simply separate the dark side and the bright side. If the histogram of the image has multiple peaks, Otsu’s method still only separate into two because of the theory.</p>
+<p>To overcome those problems, Adaptive Threshold method can be used. Basically, it calculate the threshold for each pixel according to its neighbourhood using the mean of their intensities or the Gaussian distribution of the intensities.</p>
+<hr>
+<h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><p>In OpenCV, we consider two functions for image thresholding, <code>cv2.threshold</code> and <code>cv2.adaptiveThreshold</code>.</p>
+<pre><code>retval, dst = cv2.threshold(src, thresh, maxval, type)</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image. Single-channel, 8-bit or 32-bit floating point.<br><strong>dst</strong> -&gt; Destination image.<br><strong>thresh</strong> -&gt; (compulsory) Threshold value.<br><strong>maxval</strong> -&gt; (compulsory) The value assigned to the pixel after comparing with the threshold value if <strong>THRESH_BINARY</strong> or <strong>THRESH_BINARY_INV</strong> is used.<br><strong>type</strong> -&gt; (compulsory) Thresholding type.</p>
+<p><em>Note</em> The input image should be a <em>Greyscale</em> image!!</p>
+<p>Some basic thresholding types, which are applied in OpenCV, are<br>  cv2.THRESH_BINARY<br>  cv2.THRESH_BINARY_INV<br>  cv2.THRESH_TRUNC<br>  cv2.THRESH_TOZERO<br>  cv2.THRESH_TOZERO_INV<br>The results using different types are shown below.<br><img src="threshold.jpg" srcset="/img/loading.gif" alt="result"></p>
+<p>Next, the details of each type will be presented. Suppose that the histogram of the image and the threshold are as shown.<br><img src="Threshold_Tutorial_Theory_Base_Figure.png" srcset="/img/loading.gif" alt="base"><br>The red is the intensity distribution and the blue line is the threshold.</p>
+<h4 id="THRESH-BINARY"><a href="#THRESH-BINARY" class="headerlink" title="THRESH_BINARY"></a>THRESH_BINARY</h4><p>\[<br>  dst(x, y) = maxval \space \space \mbox{if } src(x, y) &gt; thresh<br>\]<br>\[<br>  dst(x, y) = 0 \space \space \mbox{otherwise}<br>\]<br><img src="Threshold_Tutorial_Theory_Binary.png" srcset="/img/loading.gif" alt="binary"></p>
+<h4 id="THRESH-BINARY-INV"><a href="#THRESH-BINARY-INV" class="headerlink" title="THRESH_BINARY_INV"></a>THRESH_BINARY_INV</h4><p>\[<br>  dst(x, y) = 0 \space \space \mbox{if } src(x, y) &gt; thresh<br>\]<br>\[<br>  dst(x, y) = maxval \space \space \mbox{otherwise}<br>\]<br><img src="Threshold_Tutorial_Theory_Binary_Inverted.png" srcset="/img/loading.gif" alt="binar_inv"></p>
+<h4 id="THRESH-TRUNC"><a href="#THRESH-TRUNC" class="headerlink" title="THRESH_TRUNC"></a>THRESH_TRUNC</h4><p>\[<br>  dst(x, y) = maxval \space \space \mbox{if } src(x, y) &gt; thresh<br>\]<br>\[<br>  dst(x, y) = src(x, y) \space \space \mbox{otherwise}<br>\]<br><img src="Threshold_Tutorial_Theory_Truncate.png" srcset="/img/loading.gif" alt="trunc"></p>
+<h4 id="THRESH-TOZERO"><a href="#THRESH-TOZERO" class="headerlink" title="THRESH_TOZERO"></a>THRESH_TOZERO</h4><p>\[<br>  dst(x, y) = src(x, y) \space \space \mbox{if } src(x, y) &gt; thresh<br>\]<br>\[<br>  dst(x, y) = 0 \space \space \mbox{otherwise}<br>\]<br><img src="Threshold_Tutorial_Theory_Zero.png" srcset="/img/loading.gif" alt="tozero"></p>
+<h4 id="THRESH-TOZERO-INV"><a href="#THRESH-TOZERO-INV" class="headerlink" title="THRESH_TOZERO_INV"></a>THRESH_TOZERO_INV</h4><p>\[<br>  dst(x, y) = 0 \space \space \mbox{if } src(x, y) &gt; thresh<br>\]<br>\[<br>  dst(x, y) = src(x, y) \space \space \mbox{otherwise}<br>\]<br><img src="Threshold_Tutorial_Theory_Zero_Inverted.png" srcset="/img/loading.gif" alt="tozero_inv"></p>
+<p><em>Note</em> To use Otsu thresholding, pass <code>thresh = 0</code> and <code>type = (...threshold type...)+cv2.THRESH_OTSU</code>.</p>
+<pre><code>dst = cv2.adaptiveThreshold(src, maxValue, adaptiveMethod, thresholdType, blockSize, C)</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image. 8-bit single-channel.<br><strong>dst</strong> -&gt; Destination image.<br><strong>maxValue</strong> -&gt; (compulsory) Non-zero value assigned to the pixels for which the condition is satisfied.<br><strong>adaptiveMethod</strong> -&gt; (compulsory) Adaptive thresholding algorithm to use, <strong>ADAPTIVE_THRESH_MEAN_C</strong> or <strong>ADAPTIVE_THRESH_GAUSSIAN_C</strong>.<br><strong>thresholdType</strong> -&gt; (compulsory) Thresholding type that must be either <strong>THRESH_BINARY</strong> or <strong>THRESH_BINARY_INV</strong>.<br><strong>blockSize</strong> -&gt; (compulsory) Size of a pixel neighbourhood that is used to calculate a threshold value for the pixel: 3, 5, and so on.<br><strong>C</strong> -&gt; (compulsory) Constant subtracted from the mean or weighted mean. It is normally <em>positive</em> but may be zero or negative as well.</p>
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import cv2
+
+name = image_name
+img = cv2.imread(&#39;./{}.jpg&#39;.format(name), cv2.IMREAD_UNCHANGED)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+cv2.imshow(&quot;Grey image&quot;, img)
+
+# Simple image thresholding with your defined value (in this case, 127)
+_, simple = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+cv2.imshow(&quot;Simple thresholding image&quot;, simple)
+
+# Otsu thresholding (retval is the threshold found with Otsu Algorithm)
+retval, otsu = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+cv2.imshow(&quot;Otsu thresholding image&quot;, otsu)
+print(retval)
+
+# Mean Adaptive Thresholding and Gaussian Adaptive Thresholding
+mean = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
+gauss = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+cv2.imshow(&quot;Mean Adaptive Thresholding image&quot;, mean)
+cv2.imshow(&quot;Gaussian Adaptive Thresholding image&quot;, gauss)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()</code></pre><p>Example results are shown below:<br><strong>Greyscale image</strong><br><img src="laptop_original.jpg" srcset="/img/loading.gif" alt="grey"></p>
+<p><strong>Simple Thresholding with Threshold = 127</strong><br><img src="laptop_simple_threshold.jpg" srcset="/img/loading.gif" alt="simple"></p>
+<p><strong>Otsu Thresholding with Threshold = 48)</strong><br><img src="laptop_otsu.jpg" srcset="/img/loading.gif" alt="otsu"></p>
+<p>Compare result from Otsu thresholding with next two.<br><strong>Mean Adaptive Thresholding</strong><br><img src="laptop_mean_adaptive_threshold.jpg" srcset="/img/loading.gif" alt="mean"></p>
+<p><strong>Gaussian Adaptive Thresholding</strong><br><img src="laptop_gaussian_adaptive_threshold.jpg" srcset="/img/loading.gif" alt="gauss"></p>
+<h3 id="Adaptive-Thresholding-Parameters"><a href="#Adaptive-Thresholding-Parameters" class="headerlink" title="Adaptive Thresholding Parameters"></a>Adaptive Thresholding Parameters</h3><p>Two important parameters in adaptive thresholding are <strong>blockSize</strong> and <strong>C</strong>. Here, some results from mean adaptive thresholding with different parameters are presented for comparison.</p>
+<h4 id="blockSize"><a href="#blockSize" class="headerlink" title="blockSize"></a>blockSize</h4><p><strong>Adaptive Thresholding with blockSize = 3</strong><br><img src="laptop_mean_Kernel_size_3.jpg" srcset="/img/loading.gif" alt="3"></p>
+<p><strong>Adaptive Thresholding with blockSize = 9</strong><br><img src="laptop_mean_Kernel_size_9.jpg" srcset="/img/loading.gif" alt="9"></p>
+<p><strong>Adaptive Thresholding with blockSize = 15</strong><br><img src="laptop_mean_Kernel_size_15.jpg" srcset="/img/loading.gif" alt="15"></p>
+<h4 id="C"><a href="#C" class="headerlink" title="C"></a>C</h4><p><strong>Adaptive Thresholding with C = -20</strong><br><img src="laptop_mean_c_-20.jpg" srcset="/img/loading.gif" alt="minus20"></p>
+<p><strong>Adaptive Thresholding with C = -10</strong><br><img src="laptop_mean_c_-10.jpg" srcset="/img/loading.gif" alt="minus10"></p>
+<p><strong>Adaptive Thresholding with C = 0</strong><br><img src="laptop_mean_c_0.jpg" srcset="/img/loading.gif" alt="0"></p>
+<p><strong>Adaptive Thresholding with C = 10</strong><br><img src="laptop_mean_c_10.jpg" srcset="/img/loading.gif" alt="10"></p>
+<p><strong>Adaptive Thresholding with C = 20</strong><br><img src="laptop_mean_c_20.jpg" srcset="/img/loading.gif" alt="20"></p>
+<hr>
+<h1 id="Compute-Otsu’s-Algorithm-From-Scratch-TODO"><a href="#Compute-Otsu’s-Algorithm-From-Scratch-TODO" class="headerlink" title="Compute Otsu’s Algorithm From Scratch (TODO)"></a>Compute Otsu’s Algorithm From Scratch (TODO)</h1><h2 id="Also-some-optimisations-available-for-Otsu’s-Thresholding-exists-Search-and-implement-it"><a href="#Also-some-optimisations-available-for-Otsu’s-Thresholding-exists-Search-and-implement-it" class="headerlink" title="Also, some optimisations available for Otsu’s Thresholding exists. Search and implement it."></a>Also, some optimisations available for Otsu’s Thresholding exists. Search and implement it.</h2><h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li>Photo by Omid Armin on Unsplash</li>
+<li>Blog.csdn.net. 2020. OTSU算法（大津法—最大类间方差法）原理及实现_人工智能_小武的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_40647819/article/details/90179953" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40647819/article/details/90179953</a> [Accessed 29 April 2020].</li>
+<li>Blog.csdn.net. 2020. 自适应阈值（Adaptivethreshold）分割原理及实现_人工智能_小武的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_40647819/article/details/90213858" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40647819/article/details/90213858</a> [Accessed 29 April 2020].</li>
+<li>Docs.opencv.org. 2020. Basic Thresholding Operations — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/doc/tutorials/imgproc/threshold/threshold.html" target="_blank" rel="noopener">https://docs.opencv.org/2.4/doc/tutorials/imgproc/threshold/threshold.html</a> [Accessed 29 April 2020].</li>
+<li>Opencv-python-tutroals.readthedocs.io. 2020. Image Thresholding — Opencv-Python Tutorials 1 Documentation. [online] Available at: <a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_thresholding/py_thresholding.html#exercises" target="_blank" rel="noopener">https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_thresholding/py_thresholding.html#exercises</a> [Accessed 29 April 2020].</li>
+<li>Labbookpages.co.uk. 2020. Otsu Thresholding - The Lab Book Pages. [online] Available at: <a href="http://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html" target="_blank" rel="noopener">http://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html</a> [Accessed 29 April 2020].</li>
+</ol>
+<hr>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Computer/">Computer</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/26/Computer-Vision-Foundation-Image-Processing4-Image-Filtering/">
+                        <span class="hidden-mobile">Computer Vision Foundation -> Image Processing4: Image Filtering</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.10.0/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/prettify/188.0.0/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').each(function () {
+        const pre = $(this);
+        if (pre.find('code.mermaid').length > 0) {
+          return;
+        }
+        pre.addClass('prettyprint  linenums');
+      });
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Computer Vision Foundation -> Image Processing5: Image Thresholding&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+              processEscapes: true,
+              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+      });
+      MathJax.Hub.Register.StartupHook("End Jax",function () {
+        var BROWSER = MathJax.Hub.Browser;
+        var jax = "HTML-CSS";
+        if (BROWSER.isMSIE && BROWSER.hasMathPlayer) jax = "NativeMML";
+        return MathJax.Hub.setRenderer(jax);
+      });
+      MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+
+    </script>
+
+    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
