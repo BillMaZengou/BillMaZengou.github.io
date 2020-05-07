@@ -186,76 +186,35 @@
 <li>Practice with OpenCV in Python</li>
 <li>Build <em>boxFilter</em> and <em>GaussianBlur</em> Functions From Scratch</li>
 </ol>
-<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; <a href="http://filter.py" target="_blank" rel="noopener">filter.py</a> (OpenCV)</p>
-<hr />
-<h1 id="the-basic-principles-of-image-filtering"><a class="markdownIt-Anchor" href="#the-basic-principles-of-image-filtering"></a> The Basic Principles of Image Filtering</h1>
-<p>In image processing, filters are mainly used to suppress either the high frequencies in the image (<em>smoothing the image</em>) or the low frequencies (<em>enhancing or detecting edges</em>) in the image.</p>
+<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; filter.py (OpenCV)</p>
+<hr>
+<h1 id="The-Basic-Principles-of-Image-Filtering"><a href="#The-Basic-Principles-of-Image-Filtering" class="headerlink" title="The Basic Principles of Image Filtering"></a>The Basic Principles of Image Filtering</h1><p>In image processing, filters are mainly used to suppress either the high frequencies in the image (<em>smoothing the image</em>) or the low frequencies (<em>enhancing or detecting edges</em>) in the image.</p>
 <p>An image can be filtered either in the <strong>frequency</strong> or in the <strong>spatial</strong> domain.</p>
 <p>To operate in the frequency domain, we should first extract frequencies of the image, then multiple by a value. For example, to smooth the image, we multiple \(0\) to the high frequencies, and \(1\) to the low frequencies. Therefore, high frequencies can be filtered out. Final, we need to transform back to spatial domain to get the image. (c.f. Fourier Transform)</p>
-<p>In the spatial domain, convolution is equivalent to multiplication in the frequency domain. (Proof in Appendix) Mathematically,<br />
-\[<br />
-g(i, j) = h(i, j) * f(i, j),<br />
-\]<br />
-where, \(g(i, j)\) is the resulted value at point \((i, j)\), \(h(i, j)\) is the filter function and \(f(i, j)\) is the input image.</p>
+<p>In the spatial domain, convolution is equivalent to multiplication in the frequency domain. (Proof in Appendix) Mathematically,<br>\[<br>g(i, j) = h(i, j) * f(i, j),<br>\]<br>where, \(g(i, j)\) is the resulted value at point \((i, j)\), \(h(i, j)\) is the filter function and \(f(i, j)\) is the input image.</p>
 <p>The methods discussed above are equivalent in maths. But the results of the implementations in computer are different, since we have to <em>approximate</em> the filter function with a discrete and finite <strong>kernel</strong>.</p>
 <p><em>Note</em> A <strong>kernel</strong> is (usually) a smallish matrix of numbers that is used in image convolutions. Differently sized kernels containing different patterns of numbers give rise to different results under convolution. The word <strong>kernel</strong> is also commonly used as a synonym for <strong>structuring element</strong>, which is a similar object used in mathematical morphology. A structuring element differs from a kernel in that it also has a specified <em>origin</em>.</p>
-<p>The discrete convolution can be defined as a <em>‘shift and multiply’</em> operation, where we shift the kernel over the image and multiply its value with the corresponding pixel values of the image. For a square kernel with size \((M \times M)\), we can calculate the output image with the following formula:<br />
-\[<br />
-g(i, j) = \sum_{m = -\frac{M}{2}}^{\frac{M}{2}} \sum_{n = -\frac{M}{2}}^{\frac{M}{2}} h(m, n) f(i - m, j - n),<br />
-\]</p>
+<p>The discrete convolution can be defined as a <em>‘shift and multiply’</em> operation, where we shift the kernel over the image and multiply its value with the corresponding pixel values of the image. For a square kernel with size \((M \times M)\), we can calculate the output image with the following formula:<br>\[<br>g(i, j) = \sum_{m = -\frac{M}{2}}^{\frac{M}{2}} \sum_{n = -\frac{M}{2}}^{\frac{M}{2}} h(m, n) f(i - m, j - n),<br>\]</p>
 <p>Also, it is intuitive to apply some non-linear filter in spatial domain.</p>
-<p><strong>Linear Filter</strong>: Box Filter; Gaussian Filter; Laplacian Filter.<br />
-<strong>Non-linear Filter</strong>: Median Filter.</p>
-<hr />
-<h1 id="details-of-two-main-operations"><a class="markdownIt-Anchor" href="#details-of-two-main-operations"></a> Details of Two Main Operations</h1>
-<h3 id="box-filter"><a class="markdownIt-Anchor" href="#box-filter"></a> Box Filter</h3>
-<p>Mean filtering is a simple, intuitive and easy to implement method of smoothing images, i.e. reducing the amount of intensity variation between one pixel and the next.</p>
+<p><strong>Linear Filter</strong>: Box Filter; Gaussian Filter; Laplacian Filter.<br><strong>Non-linear Filter</strong>: Median Filter.</p>
+<hr>
+<h1 id="Details-of-Two-Main-Operations"><a href="#Details-of-Two-Main-Operations" class="headerlink" title="Details of Two Main Operations"></a>Details of Two Main Operations</h1><h3 id="Box-Filter"><a href="#Box-Filter" class="headerlink" title="Box Filter"></a>Box Filter</h3><p>Mean filtering is a simple, intuitive and easy to implement method of smoothing images, i.e. reducing the amount of intensity variation between one pixel and the next.</p>
 <p>Mean filter is a special type of box filter. The main purpose of the mean filter is to blur the unessential parts of the image while keeping the essential features. The <em>unessential</em> parts are the details which are smaller than the kernel in size.</p>
 <p>The drawback of the mean filter is that it is not good at filtering out the noise points from the image.</p>
-<h3 id="gaussian-filter"><a class="markdownIt-Anchor" href="#gaussian-filter"></a> Gaussian Filter</h3>
-<p>The kernel matches to a 2D Gaussian distribution with equation:<br />
-\[<br />
-h(x, y) = \frac{1}{2 \pi \sigma<sup>2}e</sup>{-\frac{x<sup>2+y</sup>2}{2\sigma^2}},<br />
-\]</p>
+<h3 id="Gaussian-Filter"><a href="#Gaussian-Filter" class="headerlink" title="Gaussian Filter"></a>Gaussian Filter</h3><p>The kernel matches to a 2D Gaussian distribution with equation:<br>\[<br>h(x, y) = \frac{1}{2 \pi \sigma^2}e^{-\frac{x^2+y^2}{2\sigma^2}},<br>\]</p>
 <p>Sometimes, for the ease of computation, the first constant term can be ignored.</p>
-<hr />
-<h1 id="practice-with-opencv-in-python"><a class="markdownIt-Anchor" href="#practice-with-opencv-in-python"></a> Practice with OpenCV in Python</h1>
-<h3 id="documentation"><a class="markdownIt-Anchor" href="#documentation"></a> Documentation</h3>
-<h4 id="box-filter-2"><a class="markdownIt-Anchor" href="#box-filter-2"></a> Box Filter</h4>
-<p>In OpenCV, box filter can be applied with two different functions, <code>cv2.blur</code> and <code>cv2.boxFilter</code>. If a <strong>normalised</strong> box filter should be used, then these two functions are equivalent. But if an <strong>unnormalised</strong> box filter should be used, then you should consider <code>cv2.boxFilter</code> only.</p>
+<hr>
+<h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><h4 id="Box-Filter-1"><a href="#Box-Filter-1" class="headerlink" title="Box Filter"></a>Box Filter</h4><p>In OpenCV, box filter can be applied with two different functions, <code>cv2.blur</code> and <code>cv2.boxFilter</code>. If a <strong>normalised</strong> box filter should be used, then these two functions are equivalent. But if an <strong>unnormalised</strong> box filter should be used, then you should consider <code>cv2.boxFilter</code> only.</p>
 <p>First is <code>cv2.blur</code></p>
-<pre class="highlight"><code class="">dst = cv2.blur(src, ksize[, dst[, anchor[, borderType]]])
-</code></pre>
-<p><strong>src</strong> -&gt; (compulsory) Source image. it can have <em>any</em> number of channels, but the depth should be <code>CV_8U</code>, <code>CV_16U</code>, <code>CV_16S</code>, <code>CV_32F</code> or <code>CV_64F</code>.<br />
-<strong>dst</strong> -&gt; Destination image.<br />
-<strong>ksize</strong> -&gt; (compulsory) blurring kernel size.<br />
-<strong>anchor</strong> -&gt; (optional) anchor point. Default value \(Point(-1,-1)\) means that the anchor is at the kernel centre.<br />
-<strong>borderType</strong> -&gt; (optional) border mode used to extrapolate pixels outside of the image.</p>
+<pre><code>dst = cv2.blur(src, ksize[, dst[, anchor[, borderType]]])</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image. it can have <em>any</em> number of channels, but the depth should be <code>CV_8U</code>, <code>CV_16U</code>, <code>CV_16S</code>, <code>CV_32F</code> or <code>CV_64F</code>.<br><strong>dst</strong> -&gt; Destination image.<br><strong>ksize</strong> -&gt; (compulsory) blurring kernel size.<br><strong>anchor</strong> -&gt; (optional) anchor point. Default value \(Point(-1,-1)\) means that the anchor is at the kernel centre.<br><strong>borderType</strong> -&gt; (optional) border mode used to extrapolate pixels outside of the image.</p>
 <p>Next is <code>cv2.boxFilter</code></p>
-<pre class="highlight"><code class="">dst = cv2.boxFilter(src, ddepth, ksize[, dst[, anchor[, normalize[, borderType]]]])
-</code></pre>
-<p><strong>src</strong> -&gt; (compulsory) Source image.<br />
-<strong>dst</strong> -&gt; Destination image.<br />
-<strong>ddepth</strong> -&gt; (compulsory) the output image depth. If the input is \(-1\), then <code>src.depth()</code> is used.<br />
-<strong>ksize</strong> -&gt; (compulsory) blurring kernel size.<br />
-<strong>anchor</strong> -&gt; (optional) anchor point. Default value \(Point(-1,-1)\) means that the anchor is at the kernel centre.<br />
-<strong>normalize</strong> -&gt; (optional) To specify whether the kernel is normalised by its area. Default is <em>True</em><br />
-<strong>borderType</strong> -&gt; (optional) border mode used to extrapolate pixels outside of the image.</p>
-<h4 id="gaussian-filter-2"><a class="markdownIt-Anchor" href="#gaussian-filter-2"></a> Gaussian Filter</h4>
-<pre class="highlight"><code class="">dst = cv2.GaussianBlur(src, ksize, sigmaX[, dst[, sigmaY[, borderType]]])
-</code></pre>
-<p><strong>src</strong> -&gt; (compulsory) Source image. it can have <em>any</em> number of channels, but the depth should be <code>CV_8U</code>, <code>CV_16U</code>, <code>CV_16S</code>, <code>CV_32F</code> or <code>CV_64F</code>.<br />
-<strong>dst</strong> -&gt; Destination image.<br />
-<strong>ksize</strong> -&gt; (compulsory) Gaussian kernel size. <code>ksize.width</code> and <code>ksize.height</code> can differ but they both must be <em>positive</em> and <em>odd</em>.<br />
-<strong>sigmaX</strong> -&gt; (compulsory) Gaussian kernel standard deviation in X direction.<br />
-<strong>sigmaY</strong> -&gt; (optional) Gaussian kernel standard deviation in Y direction. Default value is \(0\), which means it is the same as the <strong>sigmaX</strong>.<br />
-<strong>borderType</strong> -&gt; (optional) border mode used to extrapolate pixels outside of the image.</p>
+<pre><code>dst = cv2.boxFilter(src, ddepth, ksize[, dst[, anchor[, normalize[, borderType]]]])</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image.<br><strong>dst</strong> -&gt; Destination image.<br><strong>ddepth</strong> -&gt; (compulsory) the output image depth. If the input is \(-1\), then <code>src.depth()</code> is used.<br><strong>ksize</strong> -&gt; (compulsory) blurring kernel size.<br><strong>anchor</strong> -&gt; (optional) anchor point. Default value \(Point(-1,-1)\) means that the anchor is at the kernel centre.<br><strong>normalize</strong> -&gt; (optional) To specify whether the kernel is normalised by its area. Default is <em>True</em><br><strong>borderType</strong> -&gt; (optional) border mode used to extrapolate pixels outside of the image.</p>
+<h4 id="Gaussian-Filter-1"><a href="#Gaussian-Filter-1" class="headerlink" title="Gaussian Filter"></a>Gaussian Filter</h4><pre><code>dst = cv2.GaussianBlur(src, ksize, sigmaX[, dst[, sigmaY[, borderType]]])</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image. it can have <em>any</em> number of channels, but the depth should be <code>CV_8U</code>, <code>CV_16U</code>, <code>CV_16S</code>, <code>CV_32F</code> or <code>CV_64F</code>.<br><strong>dst</strong> -&gt; Destination image.<br><strong>ksize</strong> -&gt; (compulsory) Gaussian kernel size. <code>ksize.width</code> and <code>ksize.height</code> can differ but they both must be <em>positive</em> and <em>odd</em>.<br><strong>sigmaX</strong> -&gt; (compulsory) Gaussian kernel standard deviation in X direction.<br><strong>sigmaY</strong> -&gt; (optional) Gaussian kernel standard deviation in Y direction. Default value is \(0\), which means it is the same as the <strong>sigmaX</strong>.<br><strong>borderType</strong> -&gt; (optional) border mode used to extrapolate pixels outside of the image.</p>
 <p><em>Note</em> If <strong>sigmaX</strong> and <strong>sigmaY</strong> are both \(0\), then they will be automatically calculated from <code>ksize.width</code> and <code>ksize.height</code> respectively. However, it is recommended to specify <em>all</em> of <strong>ksize</strong>, <strong>sigmaX</strong> and <strong>sigmaY</strong>.</p>
-<h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
-<pre class="highlight"><code class="">import cv2
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import cv2
 
 name = image_name
-img = cv2.imread('./{}.jpg'.format(name), cv2.IMREAD_UNCHANGED)
+img = cv2.imread(&#39;./{}.jpg&#39;.format(name), cv2.IMREAD_UNCHANGED)
 cv2.imshow(&quot;Original image&quot;, img)
 
 # Box Filter using two different methods
@@ -274,39 +233,24 @@ cv2.imshow(&quot;Blur image with gaussian kernel (sigmaX &gt; sigmaY)&quot;, gau
 cv2.imshow(&quot;Blur image with gaussian kernel (sigmaX &lt; sigmaY)&quot;, gauss_blur_y)
 
 cv2.waitKey(0)
-cv2.destroyAllWindows()
-</code></pre>
-<p>Example results are shown below:</p>
-<h4 id="box-filter-3"><a class="markdownIt-Anchor" href="#box-filter-3"></a> Box Filter</h4>
-<p><strong>Less Blurring</strong><br />
-<img src="flower_less_blur.jpg" srcset="/img/loading.gif" alt="less" /></p>
-<p><strong>More Blurring</strong><br />
-<img src="flower_more_blur.jpg" srcset="/img/loading.gif" alt="more" /></p>
-<h4 id="gaussian-filter-3"><a class="markdownIt-Anchor" href="#gaussian-filter-3"></a> Gaussian Filter</h4>
-<p><strong>sigmaX = sigmaY</strong><br />
-<img src="flower_gauss_blur_uniform.jpg" srcset="/img/loading.gif" alt="uni" /></p>
-<p><strong>sigmaX &gt; sigmaY</strong><br />
-<img src="flower_gauss_blur_x.jpg" srcset="/img/loading.gif" alt="x" /></p>
-<p><strong>sigmaX &lt; sigmaY</strong><br />
-<img src="flower_gauss_blur_y.jpg" srcset="/img/loading.gif" alt="y" /></p>
-<hr />
-<h1 id="build-boxfilter-and-gaussianblur-functions-from-scratch-todo"><a class="markdownIt-Anchor" href="#build-boxfilter-and-gaussianblur-functions-from-scratch-todo"></a> Build <em>boxFilter</em> and <em>GaussianBlur</em> Functions From Scratch (TODO)</h1>
-<hr />
-<h1 id="option-other-image-filtering-todo"><a class="markdownIt-Anchor" href="#option-other-image-filtering-todo"></a> (Option) Other Image Filtering (TODO)</h1>
-<hr />
-<h1 id="option-test-denoising-for-different-filters-todo"><a class="markdownIt-Anchor" href="#option-test-denoising-for-different-filters-todo"></a> (Option) Test denoising for different filters (TODO)</h1>
-<hr />
-<h1 id="appendix-proof-of-the-convolution-theorem-todo"><a class="markdownIt-Anchor" href="#appendix-proof-of-the-convolution-theorem-todo"></a> Appendix - Proof of The convolution theorem (TODO)</h1>
-<hr />
-<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
-<p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
-<hr />
-<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
-<ol>
+cv2.destroyAllWindows()</code></pre><p>Example results are shown below:</p>
+<h4 id="Box-Filter-2"><a href="#Box-Filter-2" class="headerlink" title="Box Filter"></a>Box Filter</h4><p><strong>Less Blurring</strong><br><img src="flower_less_blur.jpg" srcset="/img/loading.gif" alt="less"></p>
+<p><strong>More Blurring</strong><br><img src="flower_more_blur.jpg" srcset="/img/loading.gif" alt="more"></p>
+<h4 id="Gaussian-Filter-2"><a href="#Gaussian-Filter-2" class="headerlink" title="Gaussian Filter"></a>Gaussian Filter</h4><p><strong>sigmaX = sigmaY</strong><br><img src="flower_gauss_blur_uniform.jpg" srcset="/img/loading.gif" alt="uni"></p>
+<p><strong>sigmaX &gt; sigmaY</strong><br><img src="flower_gauss_blur_x.jpg" srcset="/img/loading.gif" alt="x"></p>
+<p><strong>sigmaX &lt; sigmaY</strong><br><img src="flower_gauss_blur_y.jpg" srcset="/img/loading.gif" alt="y"></p>
+<hr>
+<h1 id="Build-boxFilter-and-GaussianBlur-Functions-From-Scratch-TODO"><a href="#Build-boxFilter-and-GaussianBlur-Functions-From-Scratch-TODO" class="headerlink" title="Build boxFilter and GaussianBlur Functions From Scratch (TODO)"></a>Build <em>boxFilter</em> and <em>GaussianBlur</em> Functions From Scratch (TODO)</h1><hr>
+<h1 id="Option-Other-Image-Filtering-TODO"><a href="#Option-Other-Image-Filtering-TODO" class="headerlink" title="(Option) Other Image Filtering (TODO)"></a>(Option) Other Image Filtering (TODO)</h1><hr>
+<h1 id="Option-Test-denoising-for-different-filters-TODO"><a href="#Option-Test-denoising-for-different-filters-TODO" class="headerlink" title="(Option) Test denoising for different filters (TODO)"></a>(Option) Test denoising for different filters (TODO)</h1><hr>
+<h1 id="Appendix-Proof-of-The-convolution-theorem-TODO"><a href="#Appendix-Proof-of-The-convolution-theorem-TODO" class="headerlink" title="Appendix - Proof of The convolution theorem (TODO)"></a>Appendix - Proof of The convolution theorem (TODO)</h1><hr>
+<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
 <li>Photo by Viktor Mogilat on Unsplash.</li>
-<li><a href="http://Blog.csdn.net" target="_blank" rel="noopener">Blog.csdn.net</a>. 2020. 均值滤波原理及C<ins>实现_C/C</ins>小武的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_40647819/article/details/88774522" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40647819/article/details/88774522</a> [Accessed 27 April 2020].</li>
-<li><a href="http://Homepages.inf.ed.ac.uk" target="_blank" rel="noopener">Homepages.inf.ed.ac.uk</a>. 2020. Digital Filters. [online] Available at: <a href="https://homepages.inf.ed.ac.uk/rbf/HIPR2/filtops.htm" target="_blank" rel="noopener">https://homepages.inf.ed.ac.uk/rbf/HIPR2/filtops.htm</a> [Accessed 27 April 2020].</li>
-<li><a href="http://Docs.opencv.org" target="_blank" rel="noopener">Docs.opencv.org</a>. 2020. Image Filtering — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html</a> [Accessed 27 April 2020].</li>
+<li>Blog.csdn.net. 2020. 均值滤波原理及C++实现_C/C++小武的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_40647819/article/details/88774522" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40647819/article/details/88774522</a> [Accessed 27 April 2020].</li>
+<li>Homepages.inf.ed.ac.uk. 2020. Digital Filters. [online] Available at: <a href="https://homepages.inf.ed.ac.uk/rbf/HIPR2/filtops.htm" target="_blank" rel="noopener">https://homepages.inf.ed.ac.uk/rbf/HIPR2/filtops.htm</a> [Accessed 27 April 2020].</li>
+<li>Docs.opencv.org. 2020. Image Filtering — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html</a> [Accessed 27 April 2020].</li>
 </ol>
 
             </article>
@@ -587,7 +531,7 @@ cv2.destroyAllWindows()
 
     </script>
 
-    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script>
+    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
   
 
@@ -604,5 +548,5 @@ cv2.destroyAllWindows()
 
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
