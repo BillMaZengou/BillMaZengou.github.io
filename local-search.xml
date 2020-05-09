@@ -4,6 +4,44 @@
   
   
   <entry>
+    <title>Graphics Basis: Quaternian</title>
+    <link href="/2020/05/09/Graphics-Basis-Quaternian/"/>
+    <url>/2020/05/09/Graphics-Basis-Quaternian/</url>
+    
+    <content type="html"><![CDATA[<p>Another important concept in VR/AR is graphics. Rotation can be expressed using different forms. Rotation matrix is a common way in maths and physics. However, each matrix contains 9 parameters which make it computationally expensive. Also, in computer simulation or graphics, we normally consider rigid body rotation which means that the object does not deform during the rotation. (Additionally, other problems occur using other forms to express rotation).</p><h1 id="quaternian"><a class="markdownIt-Anchor" href="#quaternian"></a> Quaternian</h1><p>Quaternian is a useful way in computer graphics to express rotation. It is a generalisation of the idea of complex numbers. Suppose \(u_0\) is a scalar and \(\mathbf{u} = (u_1, u_2, u_3)\) is a vector. Then the 4-tuple \((u_0, u_1, u_2, u_3)\) represents a quaternian, defined as:<br />\[<br />u = u_0 + \mathbf{u}<br />\]<br />or<br />\[<br />u = u_0 + u_1\mathbf{i} + u_2\mathbf{j} + u_3\mathbf{k}<br />\]<br />where<br />\[<br />\mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{i}\mathbf{j}\mathbf{k} = -1<br />\]<br />which is the same as the imaginary number. Also, multiplication between any two unit vector is the same as cross product, for example,<br />\[<br />\mathbf{i}\mathbf{j} = \mathbf{i} \times \mathbf{j} = \mathbf{k}<br />\]</p><p>The conjugate of a quaternian \(u\) is<br />\[<br />u^* = u_0 - \mathbf{u}<br />\]</p><p>A <em>pure quaternian</em> has its scalar part \(u_0 = 0\)</p><hr /><h2 id="polar-representation-of-quaternian"><a class="markdownIt-Anchor" href="#polar-representation-of-quaternian"></a> Polar Representation of Quaternian</h2><p>To understand the geometric interpretation of the quaternian, we need to have a look at its <strong>polar representation</strong>.</p><p>Let \(u\) be a unit quaternian, \(u = u_0 + \mathbf{u}\). Since \(u\) is unit, we have<br />\[<br />|u|^2 = u_0^2 + |\mathbf{u}|^2 = 1 = cos^2(\theta) + sin^2(\theta)<br />\]<br />for some \(-\pi \le \theta \leqslant \pi\).</p><p>Also, we can define a unit vector that<br />\[<br />\mathbf{s} = \frac{\mathbf{u}}{|\mathbf{u}|}<br />\]</p><p>Hence<br />\[<br />u = u_0 + \mathbf{u} = u_0 + |\mathbf{u}|\mathbf{s}<br />\]<br />Also,<br />\[<br />u = cos(\theta) + \mathbf{s} sin(\theta)<br />\]</p><hr /><h2 id="quaternian-rotation"><a class="markdownIt-Anchor" href="#quaternian-rotation"></a> Quaternian Rotation</h2><p>Now we will show how to represent rotation with quaternian. Suppose \(\mathbf{p}\) is a vector or position, then \(p = 0 + \mathbf{p}\). Let \(u\) be any unit quaternian, such that \(u = cos(\theta) + \mathbf{s} sin(\theta)\). Then multiplication \(up u^* \) results in a pure quaternian \(q = 0 + \mathbf{q}\).</p><p><strong>\(\mathbf{q}\) is the rotation of \(\mathbf{p}\) about the axis \(\mathbf{s}\) by an angle of \(2\theta\)</strong>.</p><p>For example, to rotate \(\mathbf{p} = (x, y, z)\) about the \(Z\) axis (i.e. \(\mathbf{s} = (0, 0, 1)\)). Then<br />\[<br />up = -(\mathbf{u} \cdot \mathbf{p}) + \mathbf{u} \times \mathbf{p},<br />\]<br />and<br />\[<br />upu^* = (xcos2\theta - ysin2\theta, xsin2\theta + ycos2\theta, z)<br />\]</p><p>Suppose that there are a <strong>sequence</strong> of rotations, angle \(2\theta_i\), about axis \(\mathbf{s}<em>i\), for \(i = 1, …, n\). Then the result can be achieved by applying the quaternian rotation operator in sequence:<br />\[<br />u_n u</em>{n-1}, …, u_1 p u_1^* , …, u_{n-1}^* u_n^*<br />\]<br />where \(u_i = cos\theta_i + \mathbf{s}_i sin\theta_i\)</p><hr /><h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1><ol><li>Slater, M., Steed, A. and Chrysanthou, Y., 2002. Computer Graphics And Virtual Environments. Wokingham: Addison-Wesley.</li></ol>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Computer</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Data Structure &amp; Algorithm Revision: Link List and LRU (TODO)</title>
+    <link href="/2020/05/08/Data-Structure-Algorithm-Revision-Link-List-and-LRU/"/>
+    <url>/2020/05/08/Data-Structure-Algorithm-Revision-Link-List-and-LRU/</url>
+    
+    <content type="html"><![CDATA[<p>Here is a new series about Data Structure and Algorithm.</p><h1 id="link-list"><a class="markdownIt-Anchor" href="#link-list"></a> Link List</h1><p>Two fundamental data structures are <strong>Array</strong> and <strong>Link List</strong>.</p><p>If we create an array, RAM will allocate a fixed amount of the space to store the elements. For example, <code>int a[2]</code> can store 3 elements and requires 12 bits of the memory as each <code>int</code> type occupies 4 bits of the memory. If we want to extend the array, RAM has to allocate a new space, and then copy and paste the original data into the new array. After that, new elements can be added. This is time consuming with time complexity \(O(n)\).</p><p>To speed up this process, an alternative data structure can be considered. That is the <strong>Link List</strong>. The simplest link list Amzo1998331</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Computer</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Computer Vision Foundation -&gt; Image Processing6: Edge Detection</title>
     <link href="/2020/05/01/Computer-Vision-Foundation-Image-Processing6-Edge-Detection/"/>
     <url>/2020/05/01/Computer-Vision-Foundation-Image-Processing6-Edge-Detection/</url>

@@ -17,7 +17,7 @@
   <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
   <meta name="author" content="Zengou Ma">
   <meta name="keywords" content="">
-  <title>Quarantine Day 1|隔离第一天 - Bill Ma&#39;s Blog</title>
+  <title>Graphics Basis: Quaternian - Bill Ma&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
@@ -128,8 +128,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-04-15 12:16">
-                    星期三, 四月 15日 2020, 12:16 中午
+                  <time datetime="2020-05-09 09:41">
+                    星期六, 五月 9日 2020, 9:41 上午
                   </time>
                 </div>
               
@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    276 字
+                    483 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    5
+                    9
                      分钟
                   </span>
                 
@@ -178,9 +178,71 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>Today is 2020/04/15. I have arrived in Shanghai and begun my quarantine life. As I have two upcoming deadlines, I will dedicate my time on two topics during the quarantine period. One is <strong>volumetric transform</strong>, the other is <strong>using asymmetric vibration to induce sensation of force</strong>. Because of UCL school policy, I am not allowed to show my coursework in detail. I will only show briefly the literature review and my understandings of the second topics. Later, I will probably show you the results of the first topics. Also, I will make a series of topics in <strong>Computer Vision</strong> when I do my revision during and after the quarantine period.</p>
-<p>One thing I found intriguing in the area of VR was haptics. Nowadays, there are many ways to use human hands to interact with virtual objects. They are easier and more intuitive than the normal VR controllers. The cheapest way is the hand tracking using cameras. For example, Oculus has announced that they will include hand tracking in the latest Oculus Quest; Leap Motion has worked in this field for a decade. Despite, using visual information is cheap, it is not always reliable as the hand position, orientation, light and occlusion conditions are constantly varying. Haptics glove is one alternative. Data-driven gloves can precisely track our hand and fingers. Plus, with the available data, force feedback haptics can be built.</p>
-<p>Personally, I believed that force feedback haptic glove is the future of VR interaction. Users cannot only touch, hold and move virtual objects, but also feel the shape, reaction force, texture or even temperature of the virtual objects. Is not a fascinating idea?</p>
+              <p>Another important concept in VR/AR is graphics. Rotation can be expressed using different forms. Rotation matrix is a common way in maths and physics. However, each matrix contains 9 parameters which make it computationally expensive. Also, in computer simulation or graphics, we normally consider rigid body rotation which means that the object does not deform during the rotation. (Additionally, other problems occur using other forms to express rotation).</p>
+<h1 id="quaternian"><a class="markdownIt-Anchor" href="#quaternian"></a> Quaternian</h1>
+<p>Quaternian is a useful way in computer graphics to express rotation. It is a generalisation of the idea of complex numbers. Suppose \(u_0\) is a scalar and \(\mathbf{u} = (u_1, u_2, u_3)\) is a vector. Then the 4-tuple \((u_0, u_1, u_2, u_3)\) represents a quaternian, defined as:<br />
+\[<br />
+u = u_0 + \mathbf{u}<br />
+\]<br />
+or<br />
+\[<br />
+u = u_0 + u_1\mathbf{i} + u_2\mathbf{j} + u_3\mathbf{k}<br />
+\]<br />
+where<br />
+\[<br />
+\mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{i}\mathbf{j}\mathbf{k} = -1<br />
+\]<br />
+which is the same as the imaginary number. Also, multiplication between any two unit vector is the same as cross product, for example,<br />
+\[<br />
+\mathbf{i}\mathbf{j} = \mathbf{i} \times \mathbf{j} = \mathbf{k}<br />
+\]</p>
+<p>The conjugate of a quaternian \(u\) is<br />
+\[<br />
+u^* = u_0 - \mathbf{u}<br />
+\]</p>
+<p>A <em>pure quaternian</em> has its scalar part \(u_0 = 0\)</p>
+<hr />
+<h2 id="polar-representation-of-quaternian"><a class="markdownIt-Anchor" href="#polar-representation-of-quaternian"></a> Polar Representation of Quaternian</h2>
+<p>To understand the geometric interpretation of the quaternian, we need to have a look at its <strong>polar representation</strong>.</p>
+<p>Let \(u\) be a unit quaternian, \(u = u_0 + \mathbf{u}\). Since \(u\) is unit, we have<br />
+\[<br />
+|u|^2 = u_0^2 + |\mathbf{u}|^2 = 1 = cos^2(\theta) + sin^2(\theta)<br />
+\]<br />
+for some \(-\pi \le \theta \leqslant \pi\).</p>
+<p>Also, we can define a unit vector that<br />
+\[<br />
+\mathbf{s} = \frac{\mathbf{u}}{|\mathbf{u}|}<br />
+\]</p>
+<p>Hence<br />
+\[<br />
+u = u_0 + \mathbf{u} = u_0 + |\mathbf{u}|\mathbf{s}<br />
+\]<br />
+Also,<br />
+\[<br />
+u = cos(\theta) + \mathbf{s} sin(\theta)<br />
+\]</p>
+<hr />
+<h2 id="quaternian-rotation"><a class="markdownIt-Anchor" href="#quaternian-rotation"></a> Quaternian Rotation</h2>
+<p>Now we will show how to represent rotation with quaternian. Suppose \(\mathbf{p}\) is a vector or position, then \(p = 0 + \mathbf{p}\). Let \(u\) be any unit quaternian, such that \(u = cos(\theta) + \mathbf{s} sin(\theta)\). Then multiplication \(up u^* \) results in a pure quaternian \(q = 0 + \mathbf{q}\).</p>
+<p><strong>\(\mathbf{q}\) is the rotation of \(\mathbf{p}\) about the axis \(\mathbf{s}\) by an angle of \(2\theta\)</strong>.</p>
+<p>For example, to rotate \(\mathbf{p} = (x, y, z)\) about the \(Z\) axis (i.e. \(\mathbf{s} = (0, 0, 1)\)). Then<br />
+\[<br />
+up = -(\mathbf{u} \cdot \mathbf{p}) + \mathbf{u} \times \mathbf{p},<br />
+\]<br />
+and<br />
+\[<br />
+upu^* = (xcos2\theta - ysin2\theta, xsin2\theta + ycos2\theta, z)<br />
+\]</p>
+<p>Suppose that there are a <strong>sequence</strong> of rotations, angle \(2\theta_i\), about axis \(\mathbf{s}<em>i\), for \(i = 1, …, n\). Then the result can be achieved by applying the quaternian rotation operator in sequence:<br />
+\[<br />
+u_n u</em>{n-1}, …, u_1 p u_1^* , …, u_{n-1}^* u_n^*<br />
+\]<br />
+where \(u_i = cos\theta_i + \mathbf{s}_i sin\theta_i\)</p>
+<hr />
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
+<ol>
+<li>Slater, M., Steed, A. and Chrysanthou, Y., 2002. Computer Graphics And Virtual Environments. Wokingham: Addison-Wesley.</li>
+</ol>
 
             </article>
             <hr>
@@ -191,7 +253,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Diary-Computer/">Diary, Computer</a>
+                      <a class="hover-with-bg" href="/tags/Computer/">Computer</a>
                     
                   </div>
                 
@@ -204,18 +266,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/04/15/Weight-Record/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Weight Record</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/04/13/Create-A-Blog-%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2/">
-                        <span class="hidden-mobile">Create A Blog|创建博客</span>
+                      <a href="/2020/05/08/Data-Structure-Algorithm-Revision-Link-List-and-LRU/">
+                        <span class="hidden-mobile">Data Structure & Algorithm Revision: Link List and LRU (TODO)</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -371,7 +427,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Quarantine Day 1|隔离第一天&nbsp;",
+        "Graphics Basis: Quaternian&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
