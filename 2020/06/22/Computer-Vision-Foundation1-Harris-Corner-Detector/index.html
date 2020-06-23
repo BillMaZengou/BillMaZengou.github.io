@@ -311,22 +311,14 @@ It is clear that Harris is invariant under the rotation but <strong>not</strong>
 <strong>ksize</strong> -&gt; (compulsory) Aperture parameter for the Sobel operator. For more information about the Sobel operator, check <strong>Computer Vision Foundation -&gt; Image Processing6: Edge Detection</strong>.<br />
 <strong>k</strong> -&gt; (compulsory) Harris detector free parameter.<br />
 <strong>borderType</strong> -&gt; (optional) Pixel extrapolation method. <em>BORDER_WRAP</em> is not supported. The default option is <em>BORDER_DEFAULT</em>.</p>
-<p><em>Note</em> In OpenCV, <code>borderType</code><br />
-\[<br />
-\begin{center}<br />
-\begin{tabular}{ |c|c| }<br />
-\hline<br />
-<code>cv.BORDER_CONSTANT</code> &amp; <code>iiiiii|abcdefgh|iiiiiii</code> with a specific <code>i</code> \<br />
-<code>cv.BORDER_REPLICATE</code> &amp; <code>aaaaaa|abcdefgh|hhhhhhh</code> \<br />
-<code>cv.BORDER_REFLECT</code> &amp; <code>fedcba|abcdefgh|hgfedcb</code> \<br />
-<code>cv.BORDER_WRAP</code> &amp; <code>cdefgh|abcdefgh|abcdefg</code> \<br />
-<code>cv.BORDER_REFLECT_101</code> &amp; <code>gfedcb|abcdefgh|gfedcba</code> \<br />
-<code>cv.BORDER_TRANSPARENT</code> &amp; <code>uvwxyz|abcdefgh|ijklmno</code> \<br />
-\hline<br />
-\end{tabular}<br />
-\end{center}<br />
-\]<br />
-<code>cv.BORDER_DEFAULT</code> is as the same as <code>cv.BORDER_REFLECT_101</code>.</p>
+<p><em>Note</em> In OpenCV, <code>borderType</code> has<br />
+<code>cv2.BORDER_CONSTANT</code> -&gt;    <code>iiiiii|abcdefgh|iiiiiii</code> with a specific <code>i</code><br />
+<code>cv2.BORDER_REPLICATE</code> -&gt;   <code>aaaaaa|abcdefgh|hhhhhhh</code><br />
+<code>cv2.BORDER_REFLECT</code> -&gt;     <code>fedcba|abcdefgh|hgfedcb</code><br />
+<code>cv2.BORDER_WRAP</code> -&gt;        <code>cdefgh|abcdefgh|abcdefg</code><br />
+<code>cv2.BORDER_REFLECT_101</code> -&gt; <code>gfedcb|abcdefgh|gfedcba</code><br />
+<code>cv2.BORDER_TRANSPARENT</code> -&gt; <code>uvwxyz|abcdefgh|ijklmno</code></p>
+<p><code>cv2.BORDER_DEFAULT</code> is as the same as <code>cv2.BORDER_REFLECT_101</code>.</p>
 <h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
 <pre class="highlight"><code class="">import cv2
 
