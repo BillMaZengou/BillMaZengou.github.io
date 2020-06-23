@@ -17,7 +17,7 @@
   <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
   <meta name="author" content="Zengou Ma">
   <meta name="keywords" content="">
-  <title>Quarantine Day 1|隔离第一天 - Bill Ma&#39;s Blog</title>
+  <title>CV Foundation (Competition) -&gt; Street View House Numbers1: Data Understanding - Bill Ma&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
@@ -128,8 +128,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-04-15 12:16">
-                    星期三, 四月 15日 2020, 12:16 中午
+                  <time datetime="2020-05-18 10:56">
+                    星期一, 五月 18日 2020, 10:56 上午
                   </time>
                 </div>
               
@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    276 字
+                    405 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    5
+                    8
                      分钟
                   </span>
                 
@@ -178,9 +178,47 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>Today is 2020/04/15. I have arrived in Shanghai and begun my quarantine life. As I have two upcoming deadlines, I will dedicate my time on two topics during the quarantine period. One is <strong>volumetric transform</strong>, the other is <strong>using asymmetric vibration to induce sensation of force</strong>. Because of UCL school policy, I am not allowed to show my coursework in detail. I will only show briefly the literature review and my understandings of the second topics. Later, I will probably show you the results of the first topics. Also, I will make a series of topics in <strong>Computer Vision</strong> when I do my revision during and after the quarantine period.</p>
-<p>One thing I found intriguing in the area of VR was haptics. Nowadays, there are many ways to use human hands to interact with virtual objects. They are easier and more intuitive than the normal VR controllers. The cheapest way is the hand tracking using cameras. For example, Oculus has announced that they will include hand tracking in the latest Oculus Quest; Leap Motion has worked in this field for a decade. Despite, using visual information is cheap, it is not always reliable as the hand position, orientation, light and occlusion conditions are constantly varying. Haptics glove is one alternative. Data-driven gloves can precisely track our hand and fingers. Plus, with the available data, force feedback haptics can be built.</p>
-<p>Personally, I believed that force feedback haptic glove is the future of VR interaction. Users cannot only touch, hold and move virtual objects, but also feel the shape, reaction force, texture or even temperature of the virtual objects. Is not a fascinating idea?</p>
+              <p>Competition is a fast way to practice and learn new knowledge. Datawhale and Tianchi holds a SVHN competition to help everyone learn CV. Details in <a href="https://tianchi.aliyun.com/competition/entrance/531795/introduction" target="_blank" rel="noopener">https://tianchi.aliyun.com/competition/entrance/531795/introduction</a>.</p>
+<p>I appreciate Datawhale invited me to be a TA for this competition. Nevertheless, to improve my ability, I will participate the competition along with all the students.</p>
+<hr>
+<h1 id="Data-Information"><a href="#Data-Information" class="headerlink" title="Data Information"></a>Data Information</h1><p>The first task is to understand the SVHN data. The competition use a portion of the original SVHN data (the original dataset can be found in <a href="http://ufldl.stanford.edu/housenumbers/" target="_blank" rel="noopener">http://ufldl.stanford.edu/housenumbers/</a>). It is constituted by 30 thousand images for training data, 10 thousand images for testing data.</p>
+<hr>
+<h1 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h1><p>The score is simply evaluated using<br>\[<br>  Score=\frac{Correct identified image}{Test sample size}<br>\]</p>
+<hr>
+<h1 id="Data-json-File"><a href="#Data-json-File" class="headerlink" title="Data .json File"></a>Data .json File</h1><p>The .json file provides some descriptions of the images and can be loaded with the following code.</p>
+<pre><code>import json
+train_json = json.load(open(&#39;../input/train.json&#39;))</code></pre><p>The descriptions are like (say, for <code>train_json[&#39;000008.png&#39;]</code>)</p>
+<pre><code>{&#39;height&#39;: [24, 24, 24], &#39;label&#39;: [1, 2, 8], &#39;left&#39;: [19, 29, 38], &#39;top&#39;: [4, 4, 5], &#39;width&#39;: [14, 13, 17]}</code></pre><p>as file <code>000008.png</code> contains three digits.</p>
+<p><strong>height</strong>, <strong>left</strong>, <strong>top</strong> and <strong>width</strong> give the location of each digit and <strong>label</strong> provides the ground-truth value of the data, as shown below.<br><img src="coordinate.png" srcset="/img/loading.gif" alt="digit"></p>
+<p>To show the images</p>
+<pre><code>def parse_json(d):
+   arr = np.array([
+       d[&#39;top&#39;], d[&#39;height&#39;], d[&#39;left&#39;],  d[&#39;width&#39;], d[&#39;label&#39;]
+   ])
+   arr = arr.astype(int)
+   return arr
+
+img = cv2.imread(&#39;../input/train/000011.png&#39;)
+arr = parse_json(train_json[&#39;000011.png&#39;])
+
+# The original image
+plt.figure(figsize=(10, 10))
+plt.subplot(1, arr.shape[1]+1, 1)
+plt.imshow(img)
+plt.xticks([]); plt.yticks([])
+
+# Each digit
+for idx in range(arr.shape[1]):
+   plt.subplot(1, arr.shape[1]+1, idx+2)
+   plt.imshow(img[ arr[0, idx] : arr[0, idx]+arr[1, idx] , arr[2, idx] : arr[2, idx]+arr[3, idx] ])
+   plt.title(arr[4, idx])
+   plt.xticks([]); plt.yticks([])
+plt.waitforbuttonpress()</code></pre><p>Here we show the <code>000011.png</code><br><img src="63.png" srcset="/img/loading.gif" alt="result"></p>
+<hr>
+<h1 id="Potential-Solutions"><a href="#Potential-Solutions" class="headerlink" title="Potential Solutions"></a>Potential Solutions</h1><p>Essentially, this is a classification problem. Given an image of a number, use machine learning to find what the digits are. However, the difficulty is that the length of the numbers is not the same. Some potential solutions are considered.</p>
+<p>###</p>
+<hr>
+<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
 
             </article>
             <hr>
@@ -191,7 +229,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Diary-Computer/">Diary, Computer</a>
+                      <a class="hover-with-bg" href="/tags/Computer/">Computer</a>
                     
                   </div>
                 
@@ -204,9 +242,9 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/04/15/Weight-Record/">
+                      <a href="/2020/06/22/Computer-Vision-Foundation1-Harris-Corner-Detector/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Weight Record</span>
+                        <span class="hidden-mobile">Computer Vision Foundation 1: Harris Corner Detector</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -214,8 +252,8 @@
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/04/13/Create-A-Blog-%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2/">
-                        <span class="hidden-mobile">Create A Blog|创建博客</span>
+                      <a href="/2020/05/09/Graphics-Basis-Quaternian/">
+                        <span class="hidden-mobile">Graphics Basis: Quaternian</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -371,7 +409,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Quarantine Day 1|隔离第一天&nbsp;",
+        "CV Foundation (Competition) -> Street View House Numbers1: Data Understanding&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.8k 字
+                    1.7k 字
                   </span>
                 
 
@@ -186,102 +186,36 @@
 <li>Practice with OpenCV in Python</li>
 <li>Build <em>RGB2GRAY</em> and <em>RGB2HSV</em> Functions and Their Inverse Functions From Scratch</li>
 </ol>
-<p>OpenCV code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; <a href="http://colour.py" target="_blank" rel="noopener">colour.py</a>; <a href="http://gray.py" target="_blank" rel="noopener">gray.py</a> (My <em>RGB2GRAY</em>, display using OpenCV)<br />
-Re-implementation code: <a href="https://github.com/BillMaZengou/cv_basis/my_opencv" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis/my_opencv</a> -&gt; <a href="http://grey.py" target="_blank" rel="noopener">grey.py</a> (My <em>RGB2GRAY</em>)</p>
-<hr />
-<h1 id="the-basic-principles-of-colour-conversion"><a class="markdownIt-Anchor" href="#the-basic-principles-of-colour-conversion"></a> The Basic Principles of Colour Conversion</h1>
-<h3 id="greyscale"><a class="markdownIt-Anchor" href="#greyscale"></a> Greyscale</h3>
-<p>A greyscale image is one in which the value of each pixel represents an amount of light. In other words, it carries only intensity information. The contrast ranges from black at the weakest intensity to white at the strongest.</p>
-<p>Although the conversion from RGB to grey image can easily be done, sadly there is no simple explanation. Compare the following images<br />
-<img src="laptop_original.jpg" srcset="/img/loading.gif" alt="laptop" /><br />
-<img src="laptop_Mean_Grey.jpg" srcset="/img/loading.gif" alt="laptop_mean" /><br />
-<img src="laptop_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="laptop_grey" /><br />
-The second one was obtained by <strong>averaging RGB channels</strong>. The third one was obtained using <strong>OpenCV</strong> standard, which will be introduced in later sessions.</p>
+<p>OpenCV code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; colour.py; gray.py (My <em>RGB2GRAY</em>, display using OpenCV)<br>Re-implementation code: <a href="https://github.com/BillMaZengou/cv_basis/my_opencv" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis/my_opencv</a> -&gt; grey.py (My <em>RGB2GRAY</em>)</p>
+<hr>
+<h1 id="The-Basic-Principles-of-Colour-Conversion"><a href="#The-Basic-Principles-of-Colour-Conversion" class="headerlink" title="The Basic Principles of Colour Conversion"></a>The Basic Principles of Colour Conversion</h1><h3 id="Greyscale"><a href="#Greyscale" class="headerlink" title="Greyscale"></a>Greyscale</h3><p>A greyscale image is one in which the value of each pixel represents an amount of light. In other words, it carries only intensity information. The contrast ranges from black at the weakest intensity to white at the strongest.</p>
+<p>Although the conversion from RGB to grey image can easily be done, sadly there is no simple explanation. Compare the following images<br><img src="laptop_original.jpg" srcset="/img/loading.gif" alt="laptop"><br><img src="laptop_Mean_Grey.jpg" srcset="/img/loading.gif" alt="laptop_mean"><br><img src="laptop_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="laptop_grey"><br>The second one was obtained by <strong>averaging RGB channels</strong>. The third one was obtained using <strong>OpenCV</strong> standard, which will be introduced in later sessions.</p>
 <p>The goal of the conversion is to find the balance point between human perception and computational ease.</p>
-<h4 id="perceptual-luminance-preserving-conversion-to-greyscale"><a class="markdownIt-Anchor" href="#perceptual-luminance-preserving-conversion-to-greyscale"></a> Perceptual Luminance-preserving Conversion to Greyscale</h4>
-<p>The best conversion should provide the greyscale image with the same luminance as the original colour image. Details can conduct (Grayscale, 2020, <a href="https://en.wikipedia.org/wiki/Grayscale" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Grayscale</a>).</p>
-<p>In standard,<br />
-\[<br />
-Y_{linear} = 0.2126 R_{linear} + 0.7152 G_{linear} + 0.0722 B_{linear},<br />
-\]<br />
-where \(Y_{linear}\) denotes linear luminance, and \(R_{linear}\), \(G_{linear}\) and \(B_{linear}\) represent linear luminance of each colour channel respectively. These three coefficients are the intensity perception of a normal person with the definition of <em>sRGB</em>.<br />
-<strong>Human vision is most sensitive to green, so this has the greatest coefficient value (0.7152), and least sensitive to blue, so this has the smallest coefficient (0.0722)</strong>.</p>
+<h4 id="Perceptual-Luminance-preserving-Conversion-to-Greyscale"><a href="#Perceptual-Luminance-preserving-Conversion-to-Greyscale" class="headerlink" title="Perceptual Luminance-preserving Conversion to Greyscale"></a>Perceptual Luminance-preserving Conversion to Greyscale</h4><p>The best conversion should provide the greyscale image with the same luminance as the original colour image. Details can conduct (Grayscale, 2020, <a href="https://en.wikipedia.org/wiki/Grayscale" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Grayscale</a>).</p>
+<p>In standard,<br>\[<br>Y_{linear} = 0.2126 R_{linear} + 0.7152 G_{linear} + 0.0722 B_{linear},<br>\]<br>where \(Y_{linear}\) denotes linear luminance, and \(R_{linear}\), \(G_{linear}\) and \(B_{linear}\) represent linear luminance of each colour channel respectively. These three coefficients are the intensity perception of a normal person with the definition of <em>sRGB</em>.<br><strong>Human vision is most sensitive to green, so this has the greatest coefficient value (0.7152), and least sensitive to blue, so this has the smallest coefficient (0.0722)</strong>.</p>
 <p>However, for a typical RGB image, the colour channels do not store linear luminance. The RGB values are gamma-compressed. Details are in (Gamma correction, 2020, <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Gamma_correction</a>). To simplify, psychophysics suggested that human perception of physical quantities are non-linear. Empirically, it follows Stevens’s power law. Hence, if an image is made without power law, then we will feel unnatural since it will not match to our observation by eyes. Gamma compression is a correction to make the image fit to the power law.</p>
 <p>Solving power equations are computationally expensive. Therefore, the <em>RGB2GRAY</em> operation in everyday life is merely an approximation.</p>
-<h3 id="hsv"><a class="markdownIt-Anchor" href="#hsv"></a> HSV</h3>
-<p>Most of the digital displays produce colours by combining red, green, and blue light with various intensities. Red, green and blue are so-called RGB additive primary colours. The resulting mixtures in RGB colour space can reproduce a wide variety of colours called a <strong>gamut</strong>. Gamut, or colour gamut, is a <em>complete subset</em> of colours, shown below.<br />
-<img src="gamut.png" srcset="/img/loading.gif" alt="gamut" /><br />
-<em>CIE 1931 xy chromaticity diagram</em> showing the gamut of the <em>sRGB</em> colour space (the triangle). The outer curved boundary is the monochromatic spectrum with wavelengths shown in nanometers labeled in blue. This image is drawn using sRGB, so colours outside the triangle cannot be accurately coloured. The <em>D65 white point</em> is shown in the centre, and the <em>Planckian locus</em> is shown with colour temperatures labeled in kelvins. D65 is not an ideal 6500-kelvin blackbody because it is based on atmospheric filtered daylight.</p>
-<p>The problem is that using RGB to generate colour is not intuitive. For example, as shown in the figure below, changing from one orange to a less saturated orange requires to modified RGB by different amounts.<br />
-<img src="colorchange.png" srcset="/img/loading.gif" alt="colour_change" /></p>
-<p>In the mid-1970s Alvy Ray Smith described the <strong>HSV</strong> model for computer display technology to accommodate more intuitive colour mixing models. These models were useful because they were not only more intuitive than raw RGB values, but also the conversions to and from RGB were extremely fast to compute. <strong>They could run in real time on the hardware of the 1970s</strong>.<br />
-<img src="hsv.jpg" srcset="/img/loading.gif" alt="hsv" /><br />
-HSV stands for “hue, saturation, value”. The model can be shown in a cone. To make them simple,</p>
-<p>Hue: The angle of a circle, which is the cross-section of the HSV cone. The degrees indicate different colours. By convention, Red is at \(0\), green is at \(120\), and blue is at \(240\).</p>
-<p>Saturation: The radius of a circle, which is the cross-section of the HSV cone. The lengths indicate different colourfulness.</p>
-<p>Value: The height of the HSV cone. The lengths indicate different brightness.</p>
-<hr />
-<h1 id="details-of-two-main-operations"><a class="markdownIt-Anchor" href="#details-of-two-main-operations"></a> Details of Two Main Operations</h1>
-<h3 id="rgb-grey"><a class="markdownIt-Anchor" href="#rgb-grey"></a> RGB &lt;–&gt; Grey</h3>
-<p>The conversion from RGB to Grey image is<br />
-\[<br />
-Y = 0.299 R + 0.587 G + 0.114 B,<br />
-\]<br />
-where \(Y\) is the greyscale value, and \(R\), \(G\), \(B\) denotes RGB values for each channel respectively.<br />
-As mentioned previously, this equation is an approximation of the accurate conversion. The equation works for digital formats following <strong>Rec. 601</strong> (i.e. most digital standard definition formats).</p>
+<h3 id="HSV"><a href="#HSV" class="headerlink" title="HSV"></a>HSV</h3><p>Most of the digital displays produce colours by combining red, green, and blue light with various intensities. Red, green and blue are so-called RGB additive primary colours. The resulting mixtures in RGB colour space can reproduce a wide variety of colours called a <strong>gamut</strong>. Gamut, or colour gamut, is a <em>complete subset</em> of colours, shown below.<br><img src="gamut.png" srcset="/img/loading.gif" alt="gamut"><br><em>CIE 1931 xy chromaticity diagram</em> showing the gamut of the <em>sRGB</em> colour space (the triangle). The outer curved boundary is the monochromatic spectrum with wavelengths shown in nanometers labeled in blue. This image is drawn using sRGB, so colours outside the triangle cannot be accurately coloured. The <em>D65 white point</em> is shown in the centre, and the <em>Planckian locus</em> is shown with colour temperatures labeled in kelvins. D65 is not an ideal 6500-kelvin blackbody because it is based on atmospheric filtered daylight.</p>
+<p>The problem is that using RGB to generate colour is not intuitive. For example, as shown in the figure below, changing from one orange to a less saturated orange requires to modified RGB by different amounts.<br><img src="colorchange.png" srcset="/img/loading.gif" alt="colour_change"></p>
+<p>In the mid-1970s Alvy Ray Smith described the <strong>HSV</strong> model for computer display technology to accommodate more intuitive colour mixing models. These models were useful because they were not only more intuitive than raw RGB values, but also the conversions to and from RGB were extremely fast to compute. <strong>They could run in real time on the hardware of the 1970s</strong>.<br><img src="hsv.jpg" srcset="/img/loading.gif" alt="hsv"><br>HSV stands for “hue, saturation, value”. The model can be shown in a cone. To make them simple,</p>
+<p>  Hue: The angle of a circle, which is the cross-section of the HSV cone. The degrees indicate different colours. By convention, Red is at \(0\), green is at \(120\), and blue is at \(240\).</p>
+<p>  Saturation: The radius of a circle, which is the cross-section of the HSV cone. The lengths indicate different colourfulness.</p>
+<p>  Value: The height of the HSV cone. The lengths indicate different brightness.</p>
+<hr>
+<h1 id="Details-of-Two-Main-Operations"><a href="#Details-of-Two-Main-Operations" class="headerlink" title="Details of Two Main Operations"></a>Details of Two Main Operations</h1><h3 id="RGB-lt-–-gt-Grey"><a href="#RGB-lt-–-gt-Grey" class="headerlink" title="RGB &lt;–&gt; Grey"></a>RGB &lt;–&gt; Grey</h3><p>The conversion from RGB to Grey image is<br>\[<br>Y = 0.299 R + 0.587 G + 0.114 B,<br>\]<br>where \(Y\) is the greyscale value, and \(R\), \(G\), \(B\) denotes RGB values for each channel respectively.<br>As mentioned previously, this equation is an approximation of the accurate conversion. The equation works for digital formats following <strong>Rec. 601</strong> (i.e. most digital standard definition formats).</p>
 <p><em>Note</em> The \(Y\) is gamma compressed, thus we do not need to worry about the power law.</p>
-<p>The conversion from Grey to RGB image is<br />
-\[<br />
-R = Y; G = Y; B = Y.<br />
-\]<br />
-This operation cannot produce a colourful image, but simply create a RGB image form.</p>
-<h3 id="rgb-hsv"><a class="markdownIt-Anchor" href="#rgb-hsv"></a> RGB &lt;–&gt; HSV</h3>
-<p>In case of 8-bit and 16-bit images, RGB values are converted to the floating-point format and scaled to fit the 0 to 1 range.<br />
-\[<br />
-V = \max{(R, G, B)}<br />
-\]<br />
-\[<br />
-S = \frac{V - \min{(R, G, B)}}{V} \space \space \mbox{if } V \neq 0<br />
-\]<br />
-\[<br />
-S = 0 \space \space \mbox{if } V = 0<br />
-\]<br />
-\[<br />
-H = \frac{60(G - B)}{V - \min{(R, G, B)}} \space \space \mbox{if } V = R<br />
-\]<br />
-\[<br />
-H = 120 + \frac{60(B - R)}{V - \min{(R, G, B)}} \space \space \mbox{if } V = G<br />
-\]<br />
-\[<br />
-H = 240 + \frac{60(R - G)}{V - \min{(R, G, B)}} \space \space \mbox{if } V = B<br />
-\]<br />
-If \(H &lt; 0\) then \(H = H + 360\). The output \(0 \leqslant V \leqslant 1\), \(0 \leqslant S \leqslant 1\), \(0 \leqslant H \leqslant 360\).</p>
-<p>The final output of the HSV format depends on the image data types. By default, <code>CV_32F</code> is output.<br />
-<code>CV_8U</code>: \(V = 255V\), \(S = 255S\), \(H = H/2\)<br />
-<code>CV_16U</code>: \(V = -65535V\), \(S = -65535S\), \(H = -H\) (<em>currently not supported</em>)</p>
-<hr />
-<h1 id="practice-with-opencv-in-python"><a class="markdownIt-Anchor" href="#practice-with-opencv-in-python"></a> Practice with OpenCV in Python</h1>
-<h3 id="documentation"><a class="markdownIt-Anchor" href="#documentation"></a> Documentation</h3>
-<p>In OpenCV, a general function takes care of all colour conversions.</p>
-<pre class="highlight"><code class="">dst = cv2.cvtColor(src, code[, dst[, dstCn]])
-</code></pre>
-<p><strong>src</strong> -&gt; (compulsory) Source image. 8-bit unsigned (<code>CV_8U</code>), 16-bit unsigned (<code>CV_16U</code>), or single-precision floating-point (<code>CV_32F</code>).<br />
-<strong>dst</strong> -&gt; Destination image.<br />
-<strong>code</strong> -&gt; (compulsory) colour space conversion code.<br />
-<strong>dstCn</strong> -&gt; (optional) number of channels in the destination image. If it is \(0\), <strong>dstCn</strong> is derived automatically from <strong>src</strong> and <strong>code</strong>.</p>
-<p><em>Note</em> The default colour format in OpenCV is actually <strong>BGR</strong>!!<br />
-The conventional range for RGB channel values are:<br />
-\(0\) to \(255\) for <code>CV_8U</code><br />
-\(0\) to \(65535\) for <code>CV_16U</code><br />
-\(0\) to \(1\) for <code>CV_32F</code><br />
-For linear transformation, the range does not matter. But it does for non-linear transformation.</p>
+<p>The conversion from Grey to RGB image is<br>\[<br>R = Y; G = Y; B = Y.<br>\]<br>This operation cannot produce a colourful image, but simply create a RGB image form.</p>
+<h3 id="RGB-lt-–-gt-HSV"><a href="#RGB-lt-–-gt-HSV" class="headerlink" title="RGB &lt;–&gt; HSV"></a>RGB &lt;–&gt; HSV</h3><p>In case of 8-bit and 16-bit images, RGB values are converted to the floating-point format and scaled to fit the 0 to 1 range.<br>\[<br>V = \max{(R, G, B)}<br>\]<br>\[<br>S = \frac{V - \min{(R, G, B)}}{V} \space \space \mbox{if } V \neq 0<br>\]<br>\[<br>S = 0 \space \space \mbox{if } V = 0<br>\]<br>\[<br>H = \frac{60(G - B)}{V - \min{(R, G, B)}} \space \space \mbox{if } V = R<br>\]<br>\[<br>H = 120 + \frac{60(B - R)}{V - \min{(R, G, B)}} \space \space \mbox{if } V = G<br>\]<br>\[<br>H = 240 + \frac{60(R - G)}{V - \min{(R, G, B)}} \space \space \mbox{if } V = B<br>\]<br>If \(H &lt; 0\) then \(H = H + 360\). The output \(0 \leqslant V \leqslant 1\), \(0 \leqslant S \leqslant 1\), \(0 \leqslant H \leqslant 360\).</p>
+<p>The final output of the HSV format depends on the image data types. By default, <code>CV_32F</code> is output.<br>  <code>CV_8U</code>: \(V = 255V\), \(S = 255S\), \(H = H/2\)<br>  <code>CV_16U</code>: \(V = -65535V\), \(S = -65535S\), \(H = -H\) (<em>currently not supported</em>)</p>
+<hr>
+<h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><p>In OpenCV, a general function takes care of all colour conversions.</p>
+<pre><code>dst = cv2.cvtColor(src, code[, dst[, dstCn]])</code></pre><p><strong>src</strong> -&gt; (compulsory) Source image. 8-bit unsigned (<code>CV_8U</code>), 16-bit unsigned (<code>CV_16U</code>), or single-precision floating-point (<code>CV_32F</code>).<br><strong>dst</strong> -&gt; Destination image.<br><strong>code</strong> -&gt; (compulsory) colour space conversion code.<br><strong>dstCn</strong> -&gt; (optional) number of channels in the destination image. If it is \(0\), <strong>dstCn</strong> is derived automatically from <strong>src</strong> and <strong>code</strong>.</p>
+<p><em>Note</em> The default colour format in OpenCV is actually <strong>BGR</strong>!!<br>The conventional range for RGB channel values are:<br>  \(0\) to \(255\) for <code>CV_8U</code><br>  \(0\) to \(65535\) for <code>CV_16U</code><br>  \(0\) to \(1\) for <code>CV_32F</code><br>For linear transformation, the range does not matter. But it does for non-linear transformation.</p>
 <p>The <strong>code</strong> that we care about are <code>CV_BGR2GRAY</code>, <code>CV_GRAY2BGR</code>, <code>CV_BGR2HSV</code> and <code>CV_HSV2BGR</code>.</p>
-<h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
-<h4 id="rgb-grey-2"><a class="markdownIt-Anchor" href="#rgb-grey-2"></a> RGB &lt;–&gt; Grey</h4>
-<pre class="highlight"><code class="">import cv2
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><h4 id="RGB-lt-–-gt-Grey-1"><a href="#RGB-lt-–-gt-Grey-1" class="headerlink" title="RGB &lt;–&gt; Grey"></a>RGB &lt;–&gt; Grey</h4><pre><code>import cv2
 
 name = image_name
-img = cv2.imread('./{}.jpg'.format(name), cv2.IMREAD_UNCHANGED)
+img = cv2.imread(&#39;./{}.jpg&#39;.format(name), cv2.IMREAD_UNCHANGED)
 cv2.imshow(&quot;Original image&quot;, img)
 
 bgr2grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -294,22 +228,15 @@ print(bgr2grey.shape)
 print(grey2bgr.shape)
 
 cv2.waitKey(0)
-cv2.destroyAllWindows()
-</code></pre>
-<p>Example results are shown below:<br />
-<strong>The original image</strong> (From <em>Image Processing1</em> post)<br />
-<img src="flower_original.jpg" srcset="/img/loading.gif" alt="small" /></p>
-<p><strong>RGB_to_Grey</strong><br />
-<img src="flower_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="c2g" /></p>
-<p><strong>Grey_to_RGB</strong><br />
-<img src="flower_Grey_to_RGB.jpg" srcset="/img/loading.gif" alt="g2c" /></p>
+cv2.destroyAllWindows()</code></pre><p>Example results are shown below:<br><strong>The original image</strong> (From <em>Image Processing1</em> post)<br><img src="flower_original.jpg" srcset="/img/loading.gif" alt="small"></p>
+<p><strong>RGB_to_Grey</strong><br><img src="flower_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="c2g"></p>
+<p><strong>Grey_to_RGB</strong><br><img src="flower_Grey_to_RGB.jpg" srcset="/img/loading.gif" alt="g2c"></p>
 <p><em>Note</em> The <strong>Grey_to_RGB</strong> cannot recover the original image as expected. The information of RGB values has lost. The reason of using this function is to change the dimension of the grey image.</p>
 <p>In our case, <strong>RGB_to_Grey</strong> has dimension \((530 \times 742)\), but <strong>Grey_to_RGB</strong> has dimension \((530 \times 742 \times 3)\).</p>
-<h4 id="rgb-hsv-2"><a class="markdownIt-Anchor" href="#rgb-hsv-2"></a> RGB &lt;–&gt; HSV</h4>
-<pre class="highlight"><code class="">import cv2
+<h4 id="RGB-lt-–-gt-HSV-1"><a href="#RGB-lt-–-gt-HSV-1" class="headerlink" title="RGB &lt;–&gt; HSV"></a>RGB &lt;–&gt; HSV</h4><pre><code>import cv2
 
 name = image_name
-img = cv2.imread('./{}.jpg'.format(name), cv2.IMREAD_UNCHANGED)
+img = cv2.imread(&#39;./{}.jpg&#39;.format(name), cv2.IMREAD_UNCHANGED)
 cv2.imshow(&quot;Original image&quot;, img)
 
 bgr2hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
@@ -319,18 +246,11 @@ cv2.imshow(&quot;RGB to HSV image&quot;, bgr2hsv)
 cv2.imshow(&quot;HSV to RGB image&quot;, hsv2bgr)
 
 cv2.waitKey(0)
-cv2.destroyAllWindows()
-</code></pre>
-<p>Example results are shown below:<br />
-<strong>RGB_to_HSV</strong><br />
-<img src="flower_RGB_to_HSV.jpg" srcset="/img/loading.gif" alt="h2g" /></p>
-<p><strong>HSV_to_RGB</strong><br />
-<img src="flower_HSV_to_RGB.jpg" srcset="/img/loading.gif" alt="g2h" /></p>
+cv2.destroyAllWindows()</code></pre><p>Example results are shown below:<br><strong>RGB_to_HSV</strong><br><img src="flower_RGB_to_HSV.jpg" srcset="/img/loading.gif" alt="h2g"></p>
+<p><strong>HSV_to_RGB</strong><br><img src="flower_HSV_to_RGB.jpg" srcset="/img/loading.gif" alt="g2h"></p>
 <p><em>Note</em> The unnatural colour of the <strong>RGB_to_HSV</strong> is ascribed to the fact that we use RGB to display HSV. <strong>HSV_to_RGB</strong> recover the original image as expected.</p>
-<hr />
-<h1 id="build-rgb2gray-and-rgb2hsv-functions-from-scratch"><a class="markdownIt-Anchor" href="#build-rgb2gray-and-rgb2hsv-functions-from-scratch"></a> Build <em>RGB2GRAY</em> and <em>RGB2HSV</em> Functions From Scratch</h1>
-<h3 id="rgb2gray"><a class="markdownIt-Anchor" href="#rgb2gray"></a> <em>RGB2GRAY</em></h3>
-<pre class="highlight"><code class="">import numpy as np
+<hr>
+<h1 id="Build-RGB2GRAY-and-RGB2HSV-Functions-From-Scratch"><a href="#Build-RGB2GRAY-and-RGB2HSV-Functions-From-Scratch" class="headerlink" title="Build RGB2GRAY and RGB2HSV Functions From Scratch"></a>Build <em>RGB2GRAY</em> and <em>RGB2HSV</em> Functions From Scratch</h1><h3 id="RGB2GRAY"><a href="#RGB2GRAY" class="headerlink" title="RGB2GRAY"></a><em>RGB2GRAY</em></h3><pre><code>import numpy as np
 
 def bgr_to_gray(img):
     cols, rows, channels = img.shape
@@ -340,21 +260,10 @@ def bgr_to_gray(img):
     r = img[:, :, 2]
 
     gray[:, :] = 0.229*r + 0.587*g + 0.114*b
-    return gray
-</code></pre>
-<p>The output is shown as below.<br />
-<strong>My function</strong><br />
-<img src="My_flower_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="my_grey" /><br />
-<strong>OpenCV</strong><br />
-<img src="flower_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="open_grey" /></p>
-<p>More example:<br />
-<strong>Color Image</strong><br />
-<img src="temp1.jpg" srcset="/img/loading.gif" alt="pixel" /><br />
-<strong>Greyscale Image</strong><br />
-<img src="tempG.jpg" srcset="/img/loading.gif" alt="pixel_grey" /></p>
+    return gray</code></pre><p>The output is shown as below.<br><strong>My function</strong><br><img src="My_flower_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="my_grey"><br><strong>OpenCV</strong><br><img src="flower_RGB_to_Grey.jpg" srcset="/img/loading.gif" alt="open_grey"></p>
+<p>More example:<br><strong>Color Image</strong><br><img src="temp1.jpg" srcset="/img/loading.gif" alt="pixel"><br><strong>Greyscale Image</strong><br><img src="tempG.jpg" srcset="/img/loading.gif" alt="pixel_grey"></p>
 <p><em>Note</em> Some techniques can be applied to avoid floating point calculations.</p>
-<h3 id="gray2rgb"><a class="markdownIt-Anchor" href="#gray2rgb"></a> <em>GRAY2RGB</em></h3>
-<pre class="highlight"><code class="">def grey_to_rgb(img):
+<h3 id="GRAY2RGB"><a href="#GRAY2RGB" class="headerlink" title="GRAY2RGB"></a><em>GRAY2RGB</em></h3><pre><code>def grey_to_rgb(img):
     if len(img.shape) != 2:
         print(&quot;Input should be a greyscale image&quot;)
     else:
@@ -362,29 +271,24 @@ def bgr_to_gray(img):
         dst[:, :, 0] = img[:, :]
         dst[:, :, 1] = img[:, :]
         dst[:, :, 2] = img[:, :]
-        return dst
-</code></pre>
-<h3 id="rgb2hsvtodo"><a class="markdownIt-Anchor" href="#rgb2hsvtodo"></a> <em>RGB2HSV</em>(TODO)</h3>
-<hr />
-<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
-<p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
-<hr />
-<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
-<ol>
+        return dst</code></pre><h3 id="RGB2HSV-TODO"><a href="#RGB2HSV-TODO" class="headerlink" title="RGB2HSV(TODO)"></a><em>RGB2HSV</em>(TODO)</h3><hr>
+<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
 <li>Photo by Viktor Mogilat on Unsplash.</li>
 <li>Smith, A.R., 1978. Color gamut transform pairs. ACM Siggraph Computer Graphics, 12(3), pp.12-19.</li>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. SRGB. [online] Available at: <a href="https://en.wikipedia.org/wiki/SRGB" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/SRGB</a> [Accessed 24 April 2020].</li>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. HSL And HSV. [online] Available at: <a href="https://en.wikipedia.org/wiki/HSL_and_HSV#cite_ref-Smith_13-1" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/HSL_and_HSV#cite_ref-Smith_13-1</a> [Accessed 24 April 2020].</li>
-<li><a href="http://Blog.csdn.net" target="_blank" rel="noopener">Blog.csdn.net</a>. 2020. 色彩转换系列之RGB格式与HSV格式互转原理及实现_人工智能_小武的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_40647819/article/details/92660320" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40647819/article/details/92660320</a> [Accessed 24 April 2020].</li>
-<li><a href="http://Docs.opencv.org" target="_blank" rel="noopener">Docs.opencv.org</a>. 2020. Miscellaneous Image Transformations — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/miscellaneous_transformations.html" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/imgproc/doc/miscellaneous_transformations.html</a> [Accessed 24 April 2020].</li>
+<li>En.wikipedia.org. 2020. SRGB. [online] Available at: <a href="https://en.wikipedia.org/wiki/SRGB" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/SRGB</a> [Accessed 24 April 2020].</li>
+<li>En.wikipedia.org. 2020. HSL And HSV. [online] Available at: <a href="https://en.wikipedia.org/wiki/HSL_and_HSV#cite_ref-Smith_13-1" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/HSL_and_HSV#cite_ref-Smith_13-1</a> [Accessed 24 April 2020].</li>
+<li>Blog.csdn.net. 2020. 色彩转换系列之RGB格式与HSV格式互转原理及实现_人工智能_小武的博客-CSDN博客. [online] Available at: <a href="https://blog.csdn.net/weixin_40647819/article/details/92660320" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40647819/article/details/92660320</a> [Accessed 24 April 2020].</li>
+<li>Docs.opencv.org. 2020. Miscellaneous Image Transformations — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/imgproc/doc/miscellaneous_transformations.html" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/imgproc/doc/miscellaneous_transformations.html</a> [Accessed 24 April 2020].</li>
 <li>Photo by Omid Armin on Unsplash</li>
-<li><a href="http://Docs.opencv.org" target="_blank" rel="noopener">Docs.opencv.org</a>. 2020. Opencv: Color Conversions. [online] Available at: <a href="https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html" target="_blank" rel="noopener">https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html</a> [Accessed 24 April 2020].</li>
-<li><a href="http://Tutorialspoint.com" target="_blank" rel="noopener">Tutorialspoint.com</a>. 2020. Grayscale To RGB Conversion - Tutorialspoint. [online] Available at: <a href="https://www.tutorialspoint.com/dip/grayscale_to_rgb_conversion.htm" target="_blank" rel="noopener">https://www.tutorialspoint.com/dip/grayscale_to_rgb_conversion.htm</a> [Accessed 24 April 2020].</li>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Grayscale. [online] Available at: <a href="https://en.wikipedia.org/wiki/Grayscale" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Grayscale</a> [Accessed 24 April 2020].</li>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Gamma Correction. [online] Available at: <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Gamma_correction</a> [Accessed 24 April 2020].</li>
+<li>Docs.opencv.org. 2020. Opencv: Color Conversions. [online] Available at: <a href="https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html" target="_blank" rel="noopener">https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html</a> [Accessed 24 April 2020].</li>
+<li>Tutorialspoint.com. 2020. Grayscale To RGB Conversion - Tutorialspoint. [online] Available at: <a href="https://www.tutorialspoint.com/dip/grayscale_to_rgb_conversion.htm" target="_blank" rel="noopener">https://www.tutorialspoint.com/dip/grayscale_to_rgb_conversion.htm</a> [Accessed 24 April 2020].</li>
+<li>En.wikipedia.org. 2020. Grayscale. [online] Available at: <a href="https://en.wikipedia.org/wiki/Grayscale" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Grayscale</a> [Accessed 24 April 2020].</li>
+<li>En.wikipedia.org. 2020. Gamma Correction. [online] Available at: <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Gamma_correction</a> [Accessed 24 April 2020].</li>
 <li>Stevens, S.S., 1957. On the psychophysical law. Psychological review, 64(3), p.153.</li>
 </ol>
-<hr />
+<hr>
 
             </article>
             <hr>
