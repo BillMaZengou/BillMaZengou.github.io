@@ -145,12 +145,18 @@
                 
 
 <div class="list-group">
-  <p class="h4">共计 10 篇文章</p>
+  <p class="h4">共计 11 篇文章</p>
   <hr>
   
     
       
       <p class="h5">2020</p>
+    
+    <a href="/2020/06/23/NLP1-Word-to-Vectors/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">Natural Language Processing1: Word To Vectors</span>
+      <span style="float: right;">06-23</span>
+    </a>
+  
     
     <a href="/2020/06/22/Computer-Vision-Foundation1-Harris-Corner-Detector/" class="list-group-item list-group-item-action">
       <span class="archive-post-title">Computer Vision Foundation 1: Harris Corner Detector</span>
@@ -205,13 +211,19 @@
       <span style="float: right;">04-19</span>
     </a>
   
-    
-    <a href="/2020/04/13/Create-A-Blog-%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Create A Blog|创建博客</span>
-      <span style="float: right;">04-13</span>
-    </a>
-  
 </div>
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/archives/2020/page/2/">2</a><a class="extend next" rel="next" href="/archives/2020/page/2/"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
@@ -344,7 +356,7 @@
       getSearchFile(path);
       this.onclick = null
     }
-  </script>
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 
@@ -365,5 +377,5 @@
 
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
