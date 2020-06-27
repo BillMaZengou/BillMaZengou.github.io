@@ -17,7 +17,7 @@
   <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
   <meta name="author" content="Zengou Ma">
   <meta name="keywords" content="">
-  <title>Natural Language Processing1: Word To Vectors - Bill Ma&#39;s Blog</title>
+  <title>Natural Language Processing2: Word Vectors -&gt; Algorithm and Analysis - Bill Ma&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
@@ -128,8 +128,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-06-23 23:03">
-                    星期二, 六月 23日 2020, 11:03 晚上
+                  <time datetime="2020-06-27 16:50">
+                    星期六, 六月 27日 2020, 4:50 下午
                   </time>
                 </div>
               
@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.2k 字
+                    914 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    24
+                    18
                      分钟
                   </span>
                 
@@ -178,81 +178,44 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>In this series of posts, we will tackle on another direction of AI - Natural Language Processing. Human language is a type of natural language which differs from normal programming language.</p>
-<p>This post is split into four sections:</p>
-<ol>
-<li>The Basic Principles of word2vec</li>
-<li>Practice in Python</li>
-<li>Compute word2vec From Scratch</li>
-<li>Appendix - Mathematical Derivation</li>
-</ol>
+              <p>In <em>NLP1</em>, we discussed how to convert a word into a vector with distributional semantics. Also, we demonstrated using pre-trained results to find the synonyms. However, they are more details to consider. Before diving into the neural networks and build a custom system, we present some issues and Stanford’s solution.</p>
 <p>Source code: <a href="https://github.com/BillMaZengou/nlp_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/nlp_basis</a> -&gt; WordVector.ipynb</p>
 <hr>
-<h1 id="The-Basic-Principles-of-word2vec"><a href="#The-Basic-Principles-of-word2vec" class="headerlink" title="The Basic Principles of word2vec"></a>The Basic Principles of word2vec</h1><p>To perform NLP, we need to first find a way to vectorise words so that we can put them into our applications.</p>
-<h3 id="One-hot-Vector"><a href="#One-hot-Vector" class="headerlink" title="One-hot Vector"></a>One-hot Vector</h3><p>The simplest method is the <strong>one-hot vector</strong>. Each word can be considered as a unit vector. For example,<br>\[<br>  w^{a} =<br>  \begin{bmatrix}<br>  1\\<br>  0\\<br>  0\\<br>  .\\<br>  .\\<br>  .\\<br>  0<br>  \end{bmatrix},<br>  w^{at} =<br>  \begin{bmatrix}<br>  0\\<br>  1\\<br>  0\\<br>  .\\<br>  .\\<br>  .\\<br>  0<br>  \end{bmatrix},<br>  …<br>  w^{zebra} =<br>  \begin{bmatrix}<br>  0\\<br>  0\\<br>  0\\<br>  .\\<br>  .\\<br>  .\\<br>  1<br>  \end{bmatrix}<br>\]<br>However, in NLP, we would normally like to analysis words in the context. Therefore, we need the correlations between each word. For instance, when we search “house”, we expect to find anything related to houses like “home” or “apartment”. On the contrast, we also expect to find a low correlation between words like “house” and “cat”. Those are impossible to do with one-hot vectors because all the unit vectors are orthogonal. I.e.)<br>\[<br>  (w^{house})^T w^{home} = (w^{house})^T w^{cat} = \mathbf{0}<br>\]  </p>
-<p>Previously, researchers tried to use WordNet’s list of synonyms to get similarity of the word vectors.</p>
-<p><em>Note</em> WordNet is like a large dictionary, which contains information like synonyms, hypernyms, etc.</p>
-<p>The problem is that in WordNet, the synonyms are put together without a clear relationship between each word. Take “good” as an example, “proficient” is considered as a synonym of “good”. They represent the same meaning in some certain circumstances. However, they are not interchangeable in general. Therefore, it is well-known to fail badly to use WordNet to get the similarities of words.</p>
-<h3 id="Word2Vec"><a href="#Word2Vec" class="headerlink" title="Word2Vec"></a>Word2Vec</h3><p>A better approach is to encode similarity into the word vectors. The key idea is to use so-called <strong>distributional semantics</strong>. A word’s meaning is given by the words that frequently appear close-by.</p>
-<p>Word vectors, which are sometimes referred as word embeddings or word representations, are a distributed representation.</p>
-<p>To obtain the distributed representation of word vectors, <strong>Word2Vec</strong> is a frequently used technique.</p>
-<p><strong>The Algorithm</strong></p>
-<ol>
-<li>Get a large corpus of text.</li>
-<li>Every word in a fixed vocabulary is represented by a vector.</li>
-<li>Go through each position \(t\) in the text, which has a centre word \(c\) and context (“outside”) words \(o\).</li>
-<li>Use the similarity of the word vectors for \(c\) and \(o\) to calculate the probability of \(o\) given \(c\) (i.e. \(P(o|c)\)) or vice versa.</li>
-<li>Adjust the word vectors to maximise the probability.<br><img src="word2vec.png" srcset="/img/loading.gif" alt="word"></li>
-</ol>
-<p><em>Note</em> <strong>Corpus</strong> is used in NLP to represent a bulk</p>
-<p>The mathematical derivation can be found in Appendix.</p>
-<p>Recall from \(\theta\) that, for each word, we have two vectors. We can average both at the end to obtain a better result of the optimisation.</p>
-<p>In this post, we introduced a basic model of Word2Vec. It is called <strong>Skip-grams</strong> or SG for short. There is an alternative choice of the model called <strong>Continuous Bag of Words (CBOW)</strong></p>
-<p>For the optimisation, we can use <strong>Stochastic Gradient Descent</strong> which is faster than the normal gradient descent. We may discuss in detail in later posts.</p>
-<hr>
-<h1 id="Practice-in-Python"><a href="#Practice-in-Python" class="headerlink" title="Practice in Python"></a>Practice in Python</h1><pre><code>import numpy as np
-import matplotlib.pyplot as plt
-plt.style.use(&quot;ggplot&quot;)
+<h1 id="Issues-of-word-vectors"><a href="#Issues-of-word-vectors" class="headerlink" title="Issues of word vectors"></a>Issues of word vectors</h1><h2 id="Visualisation"><a href="#Visualisation" class="headerlink" title="Visualisation"></a>Visualisation</h2><p>Usually, the results of NLP lie on a high dimensional space. (The pre-train result that we used is <code>glove.6B.100d.txt</code>, which is from <a href="https://nlp.stanford.edu/projects/glove/" target="_blank" rel="noopener">https://nlp.stanford.edu/projects/glove/</a>) Therefore, accurately visualising the result is impossible. A plausible way is to project the word vectors onto a 2D surface.</p>
+<pre><code>def display_pca_scatterplot(model, words=None, sample=0):
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from sklearn.decomposition import PCA
 
-from sklearn.manifold import TSNE
-from sklearn.decomposition import PCA
+    if words == None:
+        if sample &gt; 0:
+            words = np.random.choice(list(model.vocab.keys()), sample)
+        else:
+            words = [ word for word in model.vocab ]
 
-from gensim.test.utils import datapath, get_tmpfile
-from gensim.models import KeyedVectors
-from gensim.scripts.glove2word2vec import glove2word2vec
+    word_vectors = np.array([model[w] for w in words])
 
-glove_file = datapath(&#39;/Users/billma/Desktop/Interests/nlp_basis/data/glove.6B.100d.txt&#39;)
-word2vec_glove_file = get_tmpfile(&quot;glove.6B.100d.txt&quot;)
-dimension = glove2word2vec(glove_file, word2vec_glove_file)
-print(dimension)
+    twodim = PCA().fit_transform(word_vectors)[:, :2]
 
-model = KeyedVectors.load_word2vec_format(word2vec_glove_file)
-leader = model.most_similar(&#39;obama&#39;)
-print(&#39;obama is related to: &#39;)
-for i in leader:
-    print(i)
-
-anti_fruit = model.most_similar(negative=&#39;banana&#39;)
-for i in anti_fruit:
-    print(i)
-
-result = model.most_similar(positive=[&#39;woman&#39;,&#39;king&#39;], negative=[&#39;man&#39;])
-print(&quot;{}: {:.4f}&quot;.format(*result[0]))
-</code></pre><p>Example results are shown below:<br><strong>Similar Words To Obama</strong><br><img src="obama.png" srcset="/img/loading.gif" alt="obama"></p>
-<p><strong>Dissimilar Words To Banana</strong><br><img src="banana.png" srcset="/img/loading.gif" alt="banana"></p>
-<p><strong>Word Composition</strong><br>\[<br>  w<em>{King} - w</em>{Man} + w<em>{Woman} = w</em>{Queen}<br>\]<br><img src="queen.png" srcset="/img/loading.gif" alt="queen"></p>
-<hr>
-<h1 id="Compute-word2vec-From-Scratch-TODO"><a href="#Compute-word2vec-From-Scratch-TODO" class="headerlink" title="Compute word2vec From Scratch (TODO)"></a>Compute word2vec From Scratch (TODO)</h1><hr>
-<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><p>For each position \(t = 1,…,T\), predict context words within a window of fixed size \(m\), given centre word \(w<em>j\), we have a likelihood function such that<br>\[<br>  L(\theta) = \prod</em>{t=1}^T \prod<em>{-m \leq j \leq m, j \neq 0} P(w</em>{t+j}|w_t;\theta)<br>\]</p>
-<p>The objective function, or so-called loss or cost function, \(J(\theta)\) is the normalised negative log likelihood,<br>\[<br>  J(\theta) = -\frac{1}{T}log(L(\theta)) = -\frac{1}{T} \sum<em>{t=1}^T \sum</em>{-m \leq j \leq m, j \neq 0} log(P(w_{t+j}|w_t;\theta) )<br>\]</p>
-<p>Thus, our goal is to minimise the objective function so that the predictive accuracy can be maximised.</p>
-<p>The probability of the words are calculated using <strong>softmax</strong> function, which is commonly used in classification. Therefore,<br>\[<br>  P(o|c) = \frac{exp(u<em>{o}^{T} v_c)}{\sum</em>{w}exp(u_{w}^{T} v_c)}<br>\]<br>where \(v_c\) and \(u_w\) are the word vectors. \(w\) is the context words.</p>
-<p>In the objective function, \(\theta\) can represent all model parameters in one long vector. In our case with \(d\)-dimensional vectors and \(V\)-many words, we have a vector with \(2dV\) elements.<br>\[<br>  \theta =<br>  \begin{bmatrix}<br>  v<em>{a}\\<br>  .\\<br>  .\\<br>  .\\<br>  v</em>{zebra}\\<br>  u<em>{a}\\<br>  .\\<br>  .\\<br>  .\\<br>  u</em>{zebra}\\<br>  \end{bmatrix}<br>\]<br><em>Note</em> every word has two vectors.</p>
-<p>To optimise the objective function, we need to take derivative for both \(v_c\) and \(u_w\).</p>
-<h3 id="Optimise-with-respect-to-v-c"><a href="#Optimise-with-respect-to-v-c" class="headerlink" title="Optimise with respect to \(v_c\)"></a>Optimise with respect to \(v_c\)</h3><p>\[<br>  \frac{\partial}{\partial v<em>c} log(\frac{exp(u</em>{o}^{T} v<em>c)}{\sum</em>{w}exp(u<em>{w}^{T} v_c)})<br>\]<br>\[<br> =&gt;  \frac{\partial}{\partial v_c} u</em>{o}^{T} v<em>c - \frac{\partial}{\partial v_c} log(\sum</em>{w}exp(u<em>{w}^{T} v_c))<br>\]<br>\[<br> =&gt; u</em>{o}^{T} - \sum<em>x \frac{exp(u</em>{x}^T v<em>c)}{\sum</em>{w}exp(u<em>{w}^{T} v_c)} u_x<br>\]<br>\[<br> =&gt; u</em>{o}^{T} - \sum_x P(x|c) u_x<br>\]</p>
-<h3 id="Optimise-with-respect-to-u-w"><a href="#Optimise-with-respect-to-u-w" class="headerlink" title="Optimise with respect to \(u_w\)"></a>Optimise with respect to \(u_w\)</h3><p>\[<br>  \frac{\partial}{\partial u<em>o} log(\frac{exp(u</em>{o}^{T} v<em>c)}{\sum</em>{w}exp(u<em>{w}^{T} v_c)})<br>\]<br>\[<br> =&gt;  \frac{\partial}{\partial u_o} u</em>{o}^{T} v<em>c - \frac{\partial}{\partial u_o} log(\sum</em>{w}exp(u<em>{w}^{T} v_c))<br>\]<br>\[<br> =&gt; v_c - \frac{exp(u</em>{o}^T v<em>c)}{\sum</em>{w}exp(u_{w}^{T} v_c)} v_c<br>\]<br>\[<br> =&gt; v_c - P(o|c) v_c<br>\]</p>
-<hr>
-<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>. The learning path is based on <strong>Stanford University CS224n: Natural Language Processing with Deep Learning</strong>.</p>
+    plt.figure(figsize=(6,6))
+    plt.scatter(twodim[:,0], twodim[:,1], edgecolors=&#39;k&#39;, c=&#39;r&#39;)
+    for word, (x,y) in zip(words, twodim):
+        plt.text(x+0.05, y+0.05, word)  # put labels
+</code></pre><p><strong>Projection of The Results</strong><br><img src="result.png" srcset="/img/loading.gif" alt="project"></p>
+<p>As you can see, the food and drinks are on the left top corner; countries are on the right top corner; animals are on the left bottom corner; anything related to studies are on the right bottom corner. However, since we forced them to show up on the 2D plane, many distant features may look closer than they suppose to be.</p>
+<p>If you inspect the left top corner carefully, tea seems closer to food rather than drinks. If we compute the similarities between the tea and the coffee as well as the tea and pizza, we can see clearly that the <em>tea</em> is a drink.</p>
+<p><strong>Real Similarities</strong><br><img src="similarity.png" srcset="/img/loading.gif" alt="similarity"></p>
+<h2 id="Optimisation-Gradient-Descent"><a href="#Optimisation-Gradient-Descent" class="headerlink" title="Optimisation: Gradient Descent"></a>Optimisation: Gradient Descent</h2><p>In the last post, we proposed the cost function, \(J(\theta)\) for Word2vec. Gradient descent is an algorithm to minimise the cost function.</p>
+<p>The key idea is to use the negative gradient of \(J(\theta)\) as a direction to take a small step. Iterate the process until we reach the minimum of the cost function. Mathematically,<br>\[<br>  \theta^{new} = \theta^{old} - \alpha \nabla_{\theta} J(\theta)<br>\]<br>where \(\alpha\) is the step size or learning rate. The choice of \(\alpha\) is a trade-off. If \(\alpha\) is small, it may take too many iteration to converge. However, if it is too large, \(\theta\) cannot even converge because of overshooting.</p>
+<p>Nevertheless, \(\nabla_{\theta} J(\theta)\) is computationally expensive as the training text sample can contain millions of words.</p>
+<p>As the last post mentioned, people normally use <strong>Stochastic Gradient Descent</strong>. Instead of consider all the words in the text, we consider only a portion of the text around the centre word. This portion is called a window. It may work badly for one window of the words. However, as we iterate through all words, it does converge.</p>
+<p><em>Note</em> The window is normally one of the power numbers of \(2\), like \(32\) or \(64\). They can match the structure of GPU relatively easier.</p>
+<p>With the stochastic gradient, as we only compute the gradient of some certain word vectors, \(\nabla_{\theta} J(\theta)\) is large sparse matrix. Therefore, if we use sparse matrix structure instead of dense matrix, we are able to save space of memories.</p>
+<h2 id="Probability"><a href="#Probability" class="headerlink" title="Probability"></a>Probability</h2><p>in the last post, we mentioned to use softmax function to turn the dot product (cosine similarity) of two vectors into a probability. However, to calculate the probability with softmax function, the computational expense is high. Hence, in standard word2vec, the implementation of the skip-gram model uses <strong>negative sampling</strong>.</p>
+<p>For negative sampling, we need to train binary logistic regressions for a <em>true pair</em> (centre word and word in its context window) versus several <em>noise pairs</em> (the centre word paired with a random word)</p>
+<p>The new cost function is<br>\[<br>  J(\theta) = \frac{1}{T} \sum<em>{t=1}^{T} J_t(\theta)<br>\]<br>\[<br>  J_t(\theta) = -log(\sigma(\mathbf{u_o^T}\mathbf{v_c})) - \sum</em>{k=1}^{K}log(\sigma(\mathbf{u_k^T}\mathbf{v_c}))<br>\]<br>where we take (K\) negative samples and<br>\[<br>  \sigma(x) = \frac{1}{1+e^{-x}}<br>\]</p>
+<p>For this cost function, we need to maximise probability that real outside word appears but minimise probability that random words appear around centre word.<br>\[<br>  P(w) = \frac{U(w)^{\frac{3}{4}}}{Z}<br>\]</p>
+<h2 id="where-Z-is-for-the-normalisation-and-U-w-is-a-unigram-distribution-so-that-P-w1-w-2-P-w-1-w-2-P-w-2-turns-to-P-uni-w-1-w-2-P-w-1-P-w-2-The-frac-3-4-is-a-hyperparameter"><a href="#where-Z-is-for-the-normalisation-and-U-w-is-a-unigram-distribution-so-that-P-w1-w-2-P-w-1-w-2-P-w-2-turns-to-P-uni-w-1-w-2-P-w-1-P-w-2-The-frac-3-4-is-a-hyperparameter" class="headerlink" title="where \(Z\) is for the normalisation and \(U(w)\) is a unigram distribution so that \(P(w1, w_2) = P(w_1|w_2)P(w_2) \) turns to \(P{uni}(w_1, w_2) = P(w_1)P(w_2)\). The \(\frac{3}{4}\) is a hyperparameter."></a>where \(Z\) is for the normalisation and \(U(w)\) is a unigram distribution so that \(P(w<em>1, w_2) = P(w_1|w_2)P(w_2) \) turns to \(P</em>{uni}(w_1, w_2) = P(w_1)P(w_2)\). The \(\frac{3}{4}\) is a hyperparameter.</h2><h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>. The learning path is based on <strong>Stanford University CS224n: Natural Language Processing with Deep Learning</strong>.</p>
 <hr>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
 <li>Zh.gluon.ai. 2020. 10.1. 词嵌入（Word2vec） — 《动手学深度学习》 文档. [online] Available at: <a href="http://zh.gluon.ai/chapter_natural-language-processing/word2vec.html" target="_blank" rel="noopener">http://zh.gluon.ai/chapter_natural-language-processing/word2vec.html</a> [Accessed 25 June 2020].</li>
@@ -284,18 +247,12 @@ print(&quot;{}: {:.4f}&quot;.format(*result[0]))
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/25/Computer-Vision-Foundation2-LBP-Face-Recognition/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Computer Vision Foundation 2: LBP Face Recognition</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/06/22/Computer-Vision-Foundation1-Harris-Corner-Detector/">
-                        <span class="hidden-mobile">Computer Vision Foundation 1: Harris Corner Detector</span>
+                      <a href="/2020/06/25/Computer-Vision-Foundation2-LBP-Face-Recognition/">
+                        <span class="hidden-mobile">Computer Vision Foundation 2: LBP Face Recognition</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -451,7 +408,7 @@ print(&quot;{}: {:.4f}&quot;.format(*result[0]))
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Natural Language Processing1: Word To Vectors&nbsp;",
+        "Natural Language Processing2: Word Vectors -> Algorithm and Analysis&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
