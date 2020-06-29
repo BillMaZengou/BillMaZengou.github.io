@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.1k 字
+                    1.3k 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    22
+                    25
                      分钟
                   </span>
                 
@@ -178,123 +178,67 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>Local binary patterns (LBP) is a type of visual descriptor used for classification in computer vision. LBP is the particular case of the Texture Spectrum model proposed in 1990. LBP was first described in 1994. It has since been found to be a powerful feature for texture classification; it has further been determined that when LBP is combined with the Histogram of oriented gradients (HOG) descriptor, it improves the detection performance considerably on some datasets. A comparison of several improvements of the original LBP in the field of background subtraction was made in 2015 by Silva et al. A full survey of the different versions of LBP can be found in Bouwmans et al.</p>
-<!-- TODO: Modify above -->
-<p><em>Note</em> Descriptors are the first step to find out the connection between pixels contained in a digital image and what humans recall after having observed an image or a group of images after some minutes.</p>
-<!-- TODO: Modify above -->
-<p>They can contain general information like colour, shape, textures and motion. Also, it can be trained to process information in some specific domain, like face recognition.</p>
-<p><em>Note</em> The histogram of oriented gradients (HOG) is a feature descriptor used in computer vision and image processing for the purpose of object detection. The technique counts occurrences of gradient orientation in localised portions of an image. It is computed on a dense grid of uniformly spaced cells and uses overlapping local contrast normalisation for improved accuracy. The essential thought behind the histogram of oriented gradients descriptor is that local object appearance and shape within an image can be described by the distribution of intensity gradients or edge directions. The image is divided into small connected regions called cells, and for the pixels within each cell, a histogram of gradient directions is compiled. The descriptor is the concatenation of these histograms. For improved accuracy, the local histograms can be contrast-normalised by calculating a measure of the intensity across a larger region of the image, called a block, and then using this value to normalise all cells within the block. This normalisation results in better invariance to changes in illumination and shadowing.</p>
-<!-- TODO: Modify above -->
+              <p>Local binary patterns (LBP) is a type of visual descriptor used for classification in computer vision. LBP was first described in 1994. It has since been found to be a powerful feature for texture classification; it has further been determined that when LBP is combined with the Histogram of oriented gradients (HOG) descriptor, it improves the detection performance considerably on some datasets. A comparison of several improvements of the original LBP in the field of background subtraction was made in 2015 by Silva et al. A full survey of the different versions of LBP can be found in Bouwmans et al.</p>
+<p><em>Note</em> Descriptors are the first step to find out the connection between pixels contained in a digital image and what humans recall after having observed an image or a group of images after some minutes. They can contain general information like colour, shape, textures and motion. Also, it can be trained to process information in some specific domain, like face recognition.</p>
+<p><em>Note</em> The histogram of oriented gradients (HOG) is a feature descriptor used in computer vision and image processing for the purpose of object detection. The technique counts <strong>occurrences</strong> of gradient orientation in localised portions of an image. It is computed on a dense grid of uniformly spaced cells and uses overlapping local contrast normalisation for improved accuracy. The essential thought behind the histogram of oriented gradients descriptor is that local object appearance and shape within an image can be described by the distribution of intensity gradients or edge directions. The image is divided into small connected regions called cells, and for the pixels within each cell, a histogram of gradient directions is compiled. The descriptor is the concatenation of these histograms. For improved accuracy, the local histograms can be contrast-normalised by calculating a measure of the intensity across a larger region of the image, called a block, and then using this value to normalise all cells within the block. This normalisation results in better invariance to changes in illumination and shadowing.</p>
 <p>This post is split into three sections:</p>
 <ol>
 <li>The Basic Principles of LBP</li>
 <li>Practice with OpenCV in Python</li>
 <li>Compute LBP From Scratch</li>
 </ol>
-<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; <a href="http://lbp.py" target="_blank" rel="noopener">lbp.py</a> (OpenCV)</p>
-<hr />
-<h1 id="the-basic-principles-of-lbp"><a class="markdownIt-Anchor" href="#the-basic-principles-of-lbp"></a> The Basic Principles of LBP</h1>
-<p>The basic idea for developing the LBP operator was that two-dimensional surface textures can be described by two complementary measures: local spatial patterns and grey scale contrast.</p>
-<!-- TODO: Modify above -->
+<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; lbp.py (OpenCV)</p>
+<hr>
+<h1 id="The-Basic-Principles-of-LBP"><a href="#The-Basic-Principles-of-LBP" class="headerlink" title="The Basic Principles of LBP"></a>The Basic Principles of LBP</h1><p>The basic idea for developing the LBP operator was that two-dimensional surface textures can be described by two complementary measures: local spatial patterns and grey scale contrast.</p>
 <p>The LBP operator originally used \(3 \cross 3\) neighbourhood of each pixel and consider the result as a binary number. (\(0\) or \(1\))</p>
 <p>The LBP operator was extended to use neighbourhood of different sizes (Ojala et al. 2002). Using a circular neighbourhood and bilinearly interpolating values at non-integer pixel coordinates allow any radius and number of pixels in the neighbourhood.</p>
-<!-- TODO: Modify above -->
-<p><strong>Six properties of good features</strong></p>
-<ol>
-<li>Local: features are local, robust to occlusion and clutter. (i.e. no prior segmentation required)</li>
-<li>Accurate: precise localisation.</li>
-<li>Invariant (or covariant)</li>
-<li>Robust: noise, blur, compression, etc. do not have a big impact on the feature.</li>
-<li>Distinctive: individual features can be matched to a large database of objects.</li>
-<li>Efficient: close to real-time performance.</li>
-</ol>
-<p>The properties 3. and 4. make the detector repeatable across multiple images.</p>
-<p>Therefore, a natural selection of our interest points is the corners. Corners are locations where variations of intensity function \(f(x, y)\) in both \(x\) and \(y\) directions are high. (i.e. the partial derivatives of \(f(x, y)\) with respect to \(x\) and \(y\) are large)</p>
-<p>On the contrast, for an edge, the partial derivative is large in only a certain direction; for a flat surface, the partial derivatives are small in both directions.</p>
-<p>Harris corner detector uses these properties. Consider a small window (a kernel) on each pixel, and compute the partial derivatives by moving the kernel.<br />
-<img src="harris.png" srcset="/img/loading.gif" alt="harris" /></p>
-<p><strong>The Algorithm</strong><br />
-<img src="step.png" srcset="/img/loading.gif" alt="steps" /></p>
-<ol>
-<li>For each pixel in the input image, the corner operator is applied to obtain a <em>cornerness</em> measure for this pixel.</li>
-<li><em>Threshold cornerness map</em> to eliminate weak corners.</li>
-<li>Apply <em>non-maximal suppression</em> to eliminate points whose cornerness measure is not larger than the cornerness values of all points within a certain distance.</li>
-</ol>
-<p>Mathematically, the change of intensity for the shift \([u, v]\) can be expressed as</p>
-<p>Different \(R\) values can categorise a feature into flat surfaces, edges and corners.<br />
-<img src="r.png" srcset="/img/loading.gif" alt="cate" /></p>
-<p>Normally, it follows this pattern.<br />
-<img src="harrisClass.png" srcset="/img/loading.gif" alt="class" /></p>
-<p>The properties of Harris Corner Detector were studied.<br />
-<img src="properties.png" srcset="/img/loading.gif" alt="property" /><br />
-It is clear that Harris is invariant under the rotation but <strong>not</strong> invariant after scaling up.</p>
-<hr />
-<h1 id="practice-with-opencv-in-python"><a class="markdownIt-Anchor" href="#practice-with-opencv-in-python"></a> Practice with OpenCV in Python</h1>
-<h3 id="documentation"><a class="markdownIt-Anchor" href="#documentation"></a> Documentation</h3>
-<p>In OpenCV, we can use <code>cv2.cornerHarris</code> to implement a Harris corner detector.</p>
-<pre class="highlight"><code class="">dst = cv2.cornerHarris(src, blockSize, ksize, k, borderType=BORDER_DEFAULT)
-</code></pre>
-<p><strong>src</strong> -&gt; (compulsory) Input single-channel 8-bit or floating-point image.<br />
-<strong>dst</strong> -&gt; Image to store the Harris detector responses.<br />
-<strong>blockSize</strong> -&gt; (compulsory) Neighbourhood size.<br />
-<strong>ksize</strong> -&gt; (compulsory) Aperture parameter for the Sobel operator. For more information about the Sobel operator, check <strong>Computer Vision Foundation -&gt; Image Processing6: Edge Detection</strong>.<br />
-<strong>k</strong> -&gt; (compulsory) Harris detector free parameter.<br />
-<strong>borderType</strong> -&gt; (optional) Pixel extrapolation method. <em>BORDER_WRAP</em> is not supported. The default option is <em>BORDER_DEFAULT</em>.</p>
-<p><em>Note</em> In OpenCV, <code>borderType</code> has<br />
-<code>cv2.BORDER_CONSTANT</code> -&gt;    <code>iiiiii|abcdefgh|iiiiiii</code> with a specific <code>i</code><br />
-<code>cv2.BORDER_REPLICATE</code> -&gt;   <code>aaaaaa|abcdefgh|hhhhhhh</code><br />
-<code>cv2.BORDER_REFLECT</code> -&gt;     <code>fedcba|abcdefgh|hgfedcb</code><br />
-<code>cv2.BORDER_WRAP</code> -&gt;        <code>cdefgh|abcdefgh|abcdefg</code><br />
-<code>cv2.BORDER_REFLECT_101</code> -&gt; <code>gfedcb|abcdefgh|gfedcba</code><br />
-<code>cv2.BORDER_TRANSPARENT</code> -&gt; <code>uvwxyz|abcdefgh|ijklmno</code></p>
+<p>The basic idea of Local Binary Patterns is to summarise the local structure in an image by comparing each pixel with its neighbourhood. Take a pixel as centre and threshold its neighbours against. If the intensity of the centre pixel is greater-equal its neighbour, then denote it with \(1\) and \(0\) if not. You’ll end up with a binary number for each pixel, just like <code>11001111</code>. So with \(8\) surrounding pixels you’ll end up with \(2^8\) possible combinations, called <em>Local Binary Patterns</em> or sometimes referred to as <em>LBP</em> codes. The first LBP operator described in literature actually used a fixed \(3 \cross 3\) neighbourhood just like this:<br><img src="lbp.png" srcset="/img/loading.gif" alt="lbp"></p>
+<p>Mathematically, LBP is given by<br>\[<br>  LBP(x_c, y_c) = \sum_{p=0}^{P-1} 2^p s(i_p - i_c)<br>\]<br>where \((x_c, y_c)\) is the centre pixel with the intensity, \(i_c\), \(i_p\) denotes the intensity of the \(p\)-th neighbour. \(s\) is the sign function which is defined as<br>\[<br>  s(x) = 1<br>\]<br>if \(x &gt; 0\), otherwise it equals \(0\).</p>
+<p>Soon after the operator was published it was noted that a fixed neighbourhood fails to encode details differing in scale. So the operator was extended. The idea is to align <strong>an arbitrary number of neighbours</strong> on a circle with <strong>a variable radius</strong>.</p>
+<p>For a given point \((x_c,y_c)\), the position of the neighbour \((x_p,y_p)\), \(p \in P\) can be calculated by<br>\[<br>  x_p = x_c + R cos(\frac{2 \pi p}{P})<br>\]<br>and<br>\[<br>  y_p = y_c + R sin(\frac{2 \pi p}{P})<br>\]<br>where \(R\) is the radius of the circle and \(P\) is the number of sample points.</p>
+<p>The operator is an extension to the original LBP codes, so it’s sometimes called <em>Extended LBP</em> (also referred to as <em>Circular LBP</em>). If a points coordinate on the circle does not correspond to image coordinates, the point gets interpolated. There are many interpolation schemes. The OpenCV implementation does a <strong>bilinear interpolation</strong>.</p>
+<p>Now we have the spatial information. Next is to make a face recognition model. The representation proposed by Ahonen et al. is to divide the LBP image into \(m\) local regions and extract a histogram from each. The spatially enhanced feature vector is then obtained by concatenating the local histograms (<strong>not merging them</strong>). These histograms are called <em>Local Binary Patterns Histograms</em>.</p>
+<hr>
+<h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><p>In OpenCV, we can use <code>cv2.cornerHarris</code> to implement a Harris corner detector.</p>
+<pre><code>dst = cv2.cornerHarris(src, blockSize, ksize, k, borderType=BORDER_DEFAULT)</code></pre><p><strong>src</strong> -&gt; (compulsory) Input single-channel 8-bit or floating-point image.<br><strong>dst</strong> -&gt; Image to store the Harris detector responses.<br><strong>blockSize</strong> -&gt; (compulsory) Neighbourhood size.<br><strong>ksize</strong> -&gt; (compulsory) Aperture parameter for the Sobel operator. For more information about the Sobel operator, check <strong>Computer Vision Foundation -&gt; Image Processing6: Edge Detection</strong>.<br><strong>k</strong> -&gt; (compulsory) Harris detector free parameter.<br><strong>borderType</strong> -&gt; (optional) Pixel extrapolation method. <em>BORDER_WRAP</em> is not supported. The default option is <em>BORDER_DEFAULT</em>.</p>
+<p><em>Note</em> In OpenCV, <code>borderType</code> has<br><code>cv2.BORDER_CONSTANT</code> -&gt;    <code>iiiiii|abcdefgh|iiiiiii</code> with a specific <code>i</code><br><code>cv2.BORDER_REPLICATE</code> -&gt;   <code>aaaaaa|abcdefgh|hhhhhhh</code><br><code>cv2.BORDER_REFLECT</code> -&gt;     <code>fedcba|abcdefgh|hgfedcb</code><br><code>cv2.BORDER_WRAP</code> -&gt;        <code>cdefgh|abcdefgh|abcdefg</code><br><code>cv2.BORDER_REFLECT_101</code> -&gt; <code>gfedcb|abcdefgh|gfedcba</code><br><code>cv2.BORDER_TRANSPARENT</code> -&gt; <code>uvwxyz|abcdefgh|ijklmno</code></p>
 <p><code>cv2.BORDER_DEFAULT</code> is as the same as <code>cv2.BORDER_REFLECT_101</code>.</p>
-<h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
-<pre class="highlight"><code class="">import cv2
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import glob
+import cv2
 
-# detector parameters
-block_size = 3
-sobel_size = 3
-k = 0.06
+# Face Detection (needs to download &quot;lbpcascade_frontalface_improved.xml&quot;)
+face_detect = cv2.CascadeClassifier(&quot;lbpcascade_frontalface_improved.xml&quot;)
 
-name = image_name
-img = cv2.imread('./{}.jpg'.format(name), cv2.IMREAD_UNCHANGED)
-img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-# modify the data type setting to 32-bit floating point
-img = np.float32(img)
+img_list = glob.glob(&#39;./faces/*.jpg&#39;)
+img = cv2.imread(img_list[0], cv2.IMREAD_UNCHANGED)
+gray = cv2.cvtColor(img, code=cv2.COLOR_BGR2GRAY)
 
-# detect the corners with appropriate values as input parameters
-corners_img = cv2.cornerHarris(img, block_size, sobel_size, k)
+face_zone = face_detect.detectMultiScale(gray, scaleFactor = 2, minNeighbors = 2) # maxSize = (55,55)
+print(face_zone)
 
-#result is dilated for marking the corners, not important
-dst = cv2.dilate(dst, None)
+# For Drawing the Image
+for x, y, w, h in face_zone:
+    cv2.rectangle(img, pt1 = (x, y), pt2 = (x+w, y+h), color = [0,0,255], thickness=2)
+    cv2.circle(img, center = (x + w//2, y + h//2), radius = w//2, color = [0,255,0], thickness = 2)
 
-# Threshold for an optimal value, marking the corners in Green
-image[corners_img&gt;0.01*dst.max()] = [0,255,0]
-
-cv2.imshow('Harris Corner Detector',image)
+cv2.namedWindow(&quot;Face&quot;, 0)
+cv2.imshow(&quot;Face&quot;, img)
 cv2.waitKey(0)
-cv2.destroyAllWindows()
-</code></pre>
-<p>Example results are shown below:<br />
-<strong>Original image</strong><br />
-<img src="train.jpg" srcset="/img/loading.gif" alt="train" /></p>
-<p><strong>Interest Points</strong><br />
-<img src="train_interest_points.jpg" srcset="/img/loading.gif" alt="corner" /></p>
+cv2.destroyAllWindows()</code></pre><p>Example results are shown below:<br><strong>Original image</strong><br><img src="train.jpg" srcset="/img/loading.gif" alt="train"></p>
+<p><strong>Interest Points</strong><br><img src="train_interest_points.jpg" srcset="/img/loading.gif" alt="corner"></p>
 <p><em>Note</em> More details about <code>cv2.dilate</code>, please conduct <em><a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html" target="_blank" rel="noopener">https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html</a></em></p>
-<hr />
-<h1 id="compute-lbp-from-scratch-todo"><a class="markdownIt-Anchor" href="#compute-lbp-from-scratch-todo"></a> Compute LBP From Scratch (TODO)</h1>
-<hr />
-<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
-<p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
-<hr />
-<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
-<ol>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Local Binary Patterns. [online] Available at: <a href="https://en.wikipedia.org/wiki/Local_binary_patterns#:~:text=Local%20binary%20patterns%20(LBP)%20is,was%20first%20described%20in%201994." target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Local_binary_patterns#:~:text=Local binary patterns (LBP) is,was first described in 1994.</a> [Accessed 25 June 2020].</li>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Visual Descriptor. [online] Available at: <a href="https://en.wikipedia.org/wiki/Visual_descriptor" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Visual_descriptor</a> [Accessed 25 June 2020].</li>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Histogram Of Oriented Gradients. [online] Available at: <a href="https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients</a> [Accessed 26 June 2020].</li>
+<hr>
+<h1 id="Compute-LBP-From-Scratch-TODO"><a href="#Compute-LBP-From-Scratch-TODO" class="headerlink" title="Compute LBP From Scratch (TODO)"></a>Compute LBP From Scratch (TODO)</h1><hr>
+<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li>En.wikipedia.org. 2020. Local Binary Patterns. [online] Available at: <a href="https://en.wikipedia.org/wiki/Local_binary_patterns#:~:text=Local%20binary%20patterns%20(LBP)%20is,was%20first%20described%20in%201994." target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Local_binary_patterns#:~:text=Local%20binary%20patterns%20(LBP)%20is,was%20first%20described%20in%201994.</a> [Accessed 25 June 2020].</li>
+<li>En.wikipedia.org. 2020. Visual Descriptor. [online] Available at: <a href="https://en.wikipedia.org/wiki/Visual_descriptor" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Visual_descriptor</a> [Accessed 25 June 2020].</li>
+<li>En.wikipedia.org. 2020. Histogram Of Oriented Gradients. [online] Available at: <a href="https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients</a> [Accessed 26 June 2020].</li>
 <li>PietikÃ¤inen, M., 2010. Local Binary Patterns. Scholarpedia, 5(3), p.9775.</li>
+<li>Docs.opencv.org. 2020. Face Recognition With Opencv — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/contrib/doc/facerec/facerec_tutorial.html#local-binary-patterns-histograms" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/contrib/doc/facerec/facerec_tutorial.html#local-binary-patterns-histograms</a> [Accessed 29 June 2020].</li>
 </ol>
-<hr />
+<hr>
 
             </article>
             <hr>
