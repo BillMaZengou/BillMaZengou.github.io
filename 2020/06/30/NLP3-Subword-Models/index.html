@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    677 字
+                    431 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    13
+                    8
                      分钟
                   </span>
                 
@@ -183,8 +183,9 @@
 <p>This post is split into four sections:</p>
 <ol>
 <li>The Basic Principles of \(n\)-grams</li>
-<li>Practice in Python</li>
-<li>Compute \(n\)-grams From Scratch</li>
+<li>Practice in Python<!-- 3. Compute \\(n\\)-grams From Scratch -->
+
+</li>
 </ol>
 <!-- Source code: https://github.com/BillMaZengou/nlp_basis -> WordVector.ipynb -->
 
@@ -200,51 +201,21 @@
 <li>Start with a unigram vocabulary of all (Unicode) characters in data.</li>
 <li>Use the most frequent \(n\)-gram pairs to generate a new \(n\)-gram.</li>
 <li>Have a target vocabulary size and stop when you reach it.</li>
+<li></li>
 </ol>
 <p>An example is shown as below.<br><strong>Step 1</strong><br><img src="step1.png" srcset="/img/loading.gif" alt="step1"></p>
 <p><strong>Step 2</strong><br><img src="step2.png" srcset="/img/loading.gif" alt="step2"></p>
 <p><strong>Step 3</strong><br><img src="step3.png" srcset="/img/loading.gif" alt="step3"></p>
 <p><strong>Step 4</strong><br><img src="step4.png" srcset="/img/loading.gif" alt="step4"></p>
 <hr>
-<h1 id="Practice-in-Python"><a href="#Practice-in-Python" class="headerlink" title="Practice in Python"></a>Practice in Python</h1><pre><code>import numpy as np
-import matplotlib.pyplot as plt
-plt.style.use(&quot;ggplot&quot;)
+<h1 id="Practice-in-Python-TODO"><a href="#Practice-in-Python-TODO" class="headerlink" title="Practice in Python (TODO)"></a>Practice in Python (TODO)</h1><!-- ---
+# Compute word2vec From Scratch (TODO) -->
 
-from sklearn.manifold import TSNE
-from sklearn.decomposition import PCA
-
-from gensim.test.utils import datapath, get_tmpfile
-from gensim.models import KeyedVectors
-from gensim.scripts.glove2word2vec import glove2word2vec
-
-glove_file = datapath(&#39;/Users/billma/Desktop/Interests/nlp_basis/data/glove.6B.100d.txt&#39;)
-word2vec_glove_file = get_tmpfile(&quot;glove.6B.100d.txt&quot;)
-dimension = glove2word2vec(glove_file, word2vec_glove_file)
-print(dimension)
-
-model = KeyedVectors.load_word2vec_format(word2vec_glove_file)
-leader = model.most_similar(&#39;obama&#39;)
-print(&#39;obama is related to: &#39;)
-for i in leader:
-    print(i)
-
-anti_fruit = model.most_similar(negative=&#39;banana&#39;)
-for i in anti_fruit:
-    print(i)
-
-result = model.most_similar(positive=[&#39;woman&#39;,&#39;king&#39;], negative=[&#39;man&#39;])
-print(&quot;{}: {:.4f}&quot;.format(*result[0]))</code></pre><p>Example results are shown below:<br><strong>Similar Words To Obama</strong><br><img src="obama.png" srcset="/img/loading.gif" alt="obama"></p>
-<p><strong>Dissimilar Words To Banana</strong><br><img src="banana.png" srcset="/img/loading.gif" alt="banana"></p>
-<p><strong>Word Composition</strong><br>\[<br>  w_{King} - w_{Man} + w_{Woman} = w_{Queen}<br>\]<br><img src="queen.png" srcset="/img/loading.gif" alt="queen"></p>
 <hr>
-<h1 id="Compute-word2vec-From-Scratch-TODO"><a href="#Compute-word2vec-From-Scratch-TODO" class="headerlink" title="Compute word2vec From Scratch (TODO)"></a>Compute word2vec From Scratch (TODO)</h1><hr>
 <h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>. The learning path is based on <strong>Stanford University CS224n: Natural Language Processing with Deep Learning</strong>.</p>
 <hr>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
-<li>Zh.gluon.ai. 2020. 10.1. 词嵌入（Word2vec） — 《动手学深度学习》 文档. [online] Available at: <a href="http://zh.gluon.ai/chapter_natural-language-processing/word2vec.html" target="_blank" rel="noopener">http://zh.gluon.ai/chapter_natural-language-processing/word2vec.html</a> [Accessed 25 June 2020].</li>
-<li>Bilibili.com. 2020. [online] Available at: <a href="https://www.bilibili.com/video/BV1s4411N7fC?t=4725" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1s4411N7fC?t=4725</a> [Accessed 25 June 2020].</li>
-<li>En.wikipedia.org. 2020. Natural Language Processing. [online] Available at: <a href="https://en.wikipedia.org/wiki/Natural_language_processing" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Natural_language_processing</a> [Accessed 25 June 2020].</li>
-<li>Mikolov, T., Sutskever, I., Chen, K., Corrado, G.S. and Dean, J., 2013. Distributed representations of words and phrases and their compositionality. In Advances in neural information processing systems (pp. 3111-3119).</li>
+<li>Bilibili.com. 2020. [online] Available at: <a href="https://www.bilibili.com/video/BV1s4411N7fC?p=12" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1s4411N7fC?p=12</a> [Accessed 30 June 2020].</li>
 </ol>
 <hr>
 
@@ -520,7 +491,7 @@ print(&quot;{}: {:.4f}&quot;.format(*result[0]))</code></pre><p>Example results 
 
     </script>
 
-    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script>
 
   
 
@@ -537,5 +508,5 @@ print(&quot;{}: {:.4f}&quot;.format(*result[0]))</code></pre><p>Example results 
 
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body>
 </html>
