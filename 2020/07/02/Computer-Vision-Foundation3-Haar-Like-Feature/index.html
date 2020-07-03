@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    841 字
+                    469 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    16
+                    9
                      分钟
                   </span>
                 
@@ -178,29 +178,35 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>In last post, we discussed an algorithm to do the face detection using LBP descriptor. However, it is not the only way do it.</p>
-<p>Local binary patterns (LBP) is a type of visual descriptor used for classification in computer vision. LBP was first described in 1994. It has since been found to be a powerful feature for texture classification; it has further been determined that when LBP is combined with the Histogram of oriented gradients (HOG) descriptor, it improves the detection performance considerably on some datasets. A comparison of several improvements of the original LBP in the field of background subtraction was made in 2015 by Silva et al. A full survey of the different versions of LBP can be found in Bouwmans et al.</p>
-<p><em>Note</em> Descriptors are the first step to find out the connection between pixels contained in a digital image and what humans recall after having observed an image or a group of images after some minutes. They can contain general information like colour, shape, textures and motion. Also, it can be trained to process information in some specific domain, like face recognition.</p>
-<p><em>Note</em> The histogram of oriented gradients (HOG) is a feature descriptor used in computer vision and image processing for the purpose of object detection. The technique counts <strong>occurrences</strong> of gradient orientation in localised portions of an image. It is computed on a dense grid of uniformly spaced cells and uses overlapping local contrast normalisation for improved accuracy. The essential thought behind the histogram of oriented gradients descriptor is that local object appearance and shape within an image can be described by the distribution of intensity gradients or edge directions. The image is divided into small connected regions called cells, and for the pixels within each cell, a histogram of gradient directions is compiled. The descriptor is the concatenation of these histograms. For improved accuracy, the local histograms can be contrast-normalised by calculating a measure of the intensity across a larger region of the image, called a block, and then using this value to normalise all cells within the block. This normalisation results in better invariance to changes in illumination and shadowing.</p>
+              <p>In last post, we discussed an algorithm to do the face detection using LBP descriptor. However, it is not the only way do it. Another popular way is to use <strong>Haar-like Features</strong>.</p>
 <p>This post is split into three sections:</p>
 <ol>
 <li>The Basic Principles of Haar</li>
 <li>Practice with OpenCV in Python</li>
 <li>Compute Haar From Scratch</li>
 </ol>
-<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; haar.py (OpenCV)</p>
-<hr>
-<h1 id="The-Basic-Principles-of-Haar"><a href="#The-Basic-Principles-of-Haar" class="headerlink" title="The Basic Principles of Haar"></a>The Basic Principles of Haar</h1><hr>
-<h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><p>In OpenCV, we can use exactly the same code as the last post. However, we need to replace the <strong>xml</strong> file of LBP to it of the Haar.</p>
+<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; <a href="http://haar.py" target="_blank" rel="noopener">haar.py</a> (OpenCV)</p>
+<hr />
+<h1 id="the-basic-principles-of-haar"><a class="markdownIt-Anchor" href="#the-basic-principles-of-haar"></a> The Basic Principles of Haar</h1>
+<p>All human faces share some similar properties. These regularities may be matched using <strong>Haar Features</strong>.</p>
+<hr />
+<h1 id="practice-with-opencv-in-python"><a class="markdownIt-Anchor" href="#practice-with-opencv-in-python"></a> Practice with OpenCV in Python</h1>
+<h3 id="documentation"><a class="markdownIt-Anchor" href="#documentation"></a> Documentation</h3>
+<p>In OpenCV, we can use exactly the same code as the last post. However, we need to replace the <strong>xml</strong> file of LBP to it of the Haar.</p>
 <p>In the corresponding environment, use</p>
-<pre><code>pip show opencv-python</code></pre><p>to find the <strong>location</strong> of the library.</p>
+<pre class="highlight"><code class="">pip show opencv-python
+</code></pre>
+<p>to find the <strong>location</strong> of the library.</p>
 <p>Then enter the location, follow with</p>
-<pre><code>cd cv2 &amp;&amp; ls data</code></pre><p>to find <code>haarcascade_SOMETHING.xml</code> files which are pre-trained for different purposes.</p>
-<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import cv2
+<pre class="highlight"><code class="">cd cv2 &amp;&amp; ls data
+</code></pre>
+<p>to find <code>haarcascade_SOMETHING.xml</code> files which are pre-trained for different purposes.</p>
+<h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
+<pre class="highlight"><code class="">import cv2
 import numpy as np
 
-haar_front_face_xml = &#39;haarcascade_frontalface_default.xml&#39;  # Your .xml file directory
-haar_eye_xml = &#39;haarcascade_eye.xml&#39;  # Your .xml file directory
+haar_front_face_xml = 'haarcascade_frontalface_default.xml'  # Your .xml file directory
+haar_eye_xml = 'haarcascade_eye.xml'  # Your .xml file directory
 
 def StaticDetect(filename):
     face_cascade = cv2.CascadeClassifier(haar_front_face_xml)
@@ -211,8 +217,8 @@ def StaticDetect(filename):
     for (x, y, w, h) in faces:
         img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-    cv2.namedWindow(&#39;Face Detected！&#39;, 0)
-    cv2.imshow(&#39;Face Detected！&#39;, img)
+    cv2.namedWindow('Face Detected！', 0)
+    cv2.imshow('Face Detected！', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -222,7 +228,7 @@ def StaticDetect(filename):
 
       # Turn on the camera
       camera = cv2.VideoCapture(0)
-      cv2.namedWindow(&#39;Dynamic&#39;)
+      cv2.namedWindow('Dynamic')
 
       while True:
           # Read a frame
@@ -237,29 +243,34 @@ def StaticDetect(filename):
                   for (ex, ey, ew, eh) in eyes:
                       cv2.rectangle(frame, (ex + x, ey + y), (x + ex + ew, y + ey + eh), (0, 255, 0), 2)
 
-              cv2.imshow(&#39;Dynamic&#39;, frame)
+              cv2.imshow('Dynamic', frame)
 
-              if cv2.waitKey(100) &amp; 0xff == ord(&#39;q&#39;):
+              if cv2.waitKey(100) &amp; 0xff == ord('q'):
                   break
       camera.release()
       cv2.destroyAllWindows()
 
 
-if __name__ == &#39;__main__&#39;:
+if __name__ == '__main__':
     filename = &quot;...&quot;  # Your image directory
     StaticDetect(filename)  # Image faces/eyes detection
-    DynamicDetect()  # Video faces/eyes detection</code></pre><hr>
-<h1 id="Compute-Haar-From-Scratch-TODO"><a href="#Compute-Haar-From-Scratch-TODO" class="headerlink" title="Compute Haar From Scratch (TODO)"></a>Compute Haar From Scratch (TODO)</h1><hr>
-<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
-<hr>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
-<li>En.wikipedia.org. 2020. Local Binary Patterns. [online] Available at: <a href="https://en.wikipedia.org/wiki/Local_binary_patterns#:~:text=Local%20binary%20patterns%20(LBP)%20is,was%20first%20described%20in%201994." target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Local_binary_patterns#:~:text=Local%20binary%20patterns%20(LBP)%20is,was%20first%20described%20in%201994.</a> [Accessed 25 June 2020].</li>
-<li>En.wikipedia.org. 2020. Visual Descriptor. [online] Available at: <a href="https://en.wikipedia.org/wiki/Visual_descriptor" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Visual_descriptor</a> [Accessed 25 June 2020].</li>
-<li>En.wikipedia.org. 2020. Histogram Of Oriented Gradients. [online] Available at: <a href="https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients</a> [Accessed 26 June 2020].</li>
-<li>PietikÃ¤inen, M., 2010. Local Binary Patterns. Scholarpedia, 5(3), p.9775.</li>
-<li>Docs.opencv.org. 2020. Face Recognition With Opencv — Opencv 2.4.13.7 Documentation. [online] Available at: <a href="https://docs.opencv.org/2.4/modules/contrib/doc/facerec/facerec_tutorial.html#local-binary-patterns-histograms" target="_blank" rel="noopener">https://docs.opencv.org/2.4/modules/contrib/doc/facerec/facerec_tutorial.html#local-binary-patterns-histograms</a> [Accessed 29 June 2020].</li>
+    DynamicDetect()  # Video faces/eyes detection
+</code></pre>
+<p><strong>Face Recognition</strong><br />
+<img src="Solvay_Conferences.png" srcset="/img/loading.gif" alt="Solvay_Conferences" /></p>
+<p>The problem about this approach is similar as the LBP. It has two hyperparameters which are hard to choose. Therefore human intervenes are necessary.</p>
+<p>Another issue is that Haar-like features have a greater chance to fail if the object is rotated or tilted.</p>
+<hr />
+<h1 id="compute-haar-from-scratch-todo"><a class="markdownIt-Anchor" href="#compute-haar-from-scratch-todo"></a> Compute Haar From Scratch (TODO)</h1>
+<hr />
+<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
+<p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr />
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
+<ol>
+<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Viola–Jones Object Detection Framework. [online] Available at: <a href="https://en.wikipedia.org/wiki/Viola%E2%80%93Jones_object_detection_framework" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Viola–Jones_object_detection_framework</a> [Accessed 2 July 2020].</li>
 </ol>
-<hr>
+<hr />
 
             </article>
             <hr>
@@ -282,6 +293,12 @@ if __name__ == &#39;__main__&#39;:
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/07/03/NLP4-Contextual-Word-Embeddings/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Natural Language Processing4: Contextual Word Embeddings</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">
@@ -533,7 +550,7 @@ if __name__ == &#39;__main__&#39;:
 
     </script>
 
-    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script>
+    <script  src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
   
 
@@ -550,5 +567,5 @@ if __name__ == &#39;__main__&#39;:
 
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

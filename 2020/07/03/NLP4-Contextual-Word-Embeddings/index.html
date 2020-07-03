@@ -17,7 +17,7 @@
   <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
   <meta name="author" content="Zengou Ma">
   <meta name="keywords" content="">
-  <title>Natural Language Processing3: Subword Models - Bill Ma&#39;s Blog</title>
+  <title>Natural Language Processing4: Contextual Word Embeddings - Bill Ma&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
@@ -128,8 +128,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-06-30 20:33">
-                    星期二, 六月 30日 2020, 8:33 晚上
+                  <time datetime="2020-07-03 11:06">
+                    星期五, 七月 3日 2020, 11:06 上午
                   </time>
                 </div>
               
@@ -139,7 +139,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    431 字
+                    1.2k 字
                   </span>
                 
 
@@ -149,7 +149,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    8
+                    23
                      分钟
                   </span>
                 
@@ -178,46 +178,105 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>In <em>NLP1</em> and <em>NLP2</em>, we introduced the concept of the word vectors and a method of generating them with the distributional semantics, called <strong>Word2Vec</strong>. However, this approach has an inherent problem. A word vector can only capture the semantic information for each word. Hence, if we run the model on some words on the internet like “Gooooooood”, the computer may not recognise this word correctly as “Good”.</p>
-<p>There is another approach called <strong>\(n\)-grams</strong>, which was firstly proposed in 1986.</p>
-<p>This post is split into four sections:</p>
-<ol>
-<li>The Basic Principles of \(n\)-grams</li>
-<li>Practice in Python<!-- 3. Compute \\(n\\)-grams From Scratch -->
-
-</li>
-</ol>
+              <p>In previous posts, we discussed the basic vectorisations of words. <strong>One-Hot</strong> considers each words in the context is orthogonal to each other. <strong>Word2vec</strong> provides us a distributive way to present words as probabilities of showing up given the neighbouring words. <strong>\(n\)-grams</strong> as a character-based method solves some problems about the word-based method.</p>
+<p>For a versatile NLP application, we would like to have a pre-trained word vectors so that we can fine tune for some specific application such as QA or translation. But use a pre-trained model, we will inevitably encounter unknown words which are not in the pre-trained model. Usually, we will let the machine to output <code>&lt;UNK&gt;</code> for unknown words. The solutions to the unknown words problem can be to develop character-based word vectors or partially solve it during the fine-tune stage.</p>
+<p>Another problem is that we just have one representation for a word (i.e.one word vector for one word), but words have different <strong>aspects</strong>, including semantics, syntactic behaviour, and register/connotations.</p>
+<p>In the old NLP models, those language models are producing context-specific word representations at each position.</p>
+<!-- However, until now, we have not discussed a way to contextually embed the words. -->
 <!-- Source code: https://github.com/BillMaZengou/nlp_basis -> WordVector.ipynb -->
+<hr />
+<h1 id="issues-of-word-vectors"><a class="markdownIt-Anchor" href="#issues-of-word-vectors"></a> Issues of word vectors</h1>
+<h2 id="visualisation"><a class="markdownIt-Anchor" href="#visualisation"></a> Visualisation</h2>
+<p>Usually, the results of NLP lie on a high dimensional space. (The pre-train result that we used is <code>glove.6B.100d.txt</code>, which is from <a href="https://nlp.stanford.edu/projects/glove/" target="_blank" rel="noopener">https://nlp.stanford.edu/projects/glove/</a>) Therefore, accurately visualising the result is impossible. A plausible way is to project the word vectors onto a 2D surface.</p>
+<pre class="highlight"><code class="">def display_pca_scatterplot(model, words=None, sample=0):
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from sklearn.decomposition import PCA
 
-<hr>
-<h1 id="The-Basic-Principles-of-n-grams"><a href="#The-Basic-Principles-of-n-grams" class="headerlink" title="The Basic Principles of \(n\)-grams"></a>The Basic Principles of \(n\)-grams</h1><p>In Linguistics, they have a special branch called Phonetics, which studies the sound of the language. Phonology posits a small set or sets of distinctive, categorical units: <strong>phonemes</strong> or distinctive features. However, it is hard or even impossible to extract information from phonemes using the neural networking.</p>
-<p>Another branch called Morphology. We have <strong>morphemes</strong> as the smallest semantic unit. For example, “unfortunately” can be separated as<br>\[<br>  [un+[[fortun(e)]+ate]+ly<br>\]<br>However, morphology cannot be successfully applied in deep learning.</p>
-<p>A practical approach is to use <strong>\(n\)-grams</strong> as <strong>Character-Level Models</strong>.</p>
-<p>Another linguistic issue in general is that different languages have different rules. For example, Chinese does not have segmentation; Arabic may concentrate a few words into a single word. Also, when translating people’s names to another language, instead of interpreting the meaning of the name, we actually want transliteration according to the destination language. These problems will gain benefits from the Character-Level Models. Purely character-level NMT models gradually gained promising results around 2016.</p>
-<p>One obvious problem about these models is that they are slow. Thus, a trade-off method is called <strong>Sub-word models</strong>.</p>
-<p>There are two trends of Sub-word models. One is to use the same architecture as for word-level model, but use smaller units, called <em>word pieces</em>. Another is to use hybrid architectures. Main model has <em>words</em>; something else for <em>characters</em>.</p>
-<p><strong>A Word Segmentation Algorithm</strong></p>
+    if words == None:
+        if sample &gt; 0:
+            words = np.random.choice(list(model.vocab.keys()), sample)
+        else:
+            words = [ word for word in model.vocab ]
+
+    word_vectors = np.array([model[w] for w in words])
+
+    twodim = PCA().fit_transform(word_vectors)[:, :2]
+
+    plt.figure(figsize=(6,6))
+    plt.scatter(twodim[:,0], twodim[:,1], edgecolors='k', c='r')
+    for word, (x,y) in zip(words, twodim):
+        plt.text(x+0.05, y+0.05, word)  # put labels
+</code></pre>
+<p><strong>Projection of The Results</strong><br />
+<img src="result.png" srcset="/img/loading.gif" alt="project" /></p>
+<p>As you can see, the food and drinks are on the left top corner; countries are on the right top corner; animals are on the left bottom corner; anything related to studies are on the right bottom corner. However, since we forced them to show up on the 2D plane, many distant features may look closer than they suppose to be.</p>
+<p>If you inspect the left top corner carefully, tea seems closer to food rather than drinks. If we compute the similarities between the tea and the coffee as well as the tea and pizza, we can see clearly that the <em>tea</em> is a drink.</p>
+<p><strong>Real Similarities</strong><br />
+<img src="similarity.png" srcset="/img/loading.gif" alt="similarity" /></p>
+<h2 id="optimisation-gradient-descent"><a class="markdownIt-Anchor" href="#optimisation-gradient-descent"></a> Optimisation: Gradient Descent</h2>
+<p>In the last post, we proposed the cost function, \(J(\theta)\) for Word2vec. Gradient descent is an algorithm to minimise the cost function.</p>
+<p>The key idea is to use the negative gradient of \(J(\theta)\) as a direction to take a small step. Iterate the process until we reach the minimum of the cost function. Mathematically,<br />
+\[<br />
+\theta^{new} = \theta^{old} - \alpha \nabla_{\theta} J(\theta)<br />
+\]<br />
+where \(\alpha\) is the step size or learning rate. The choice of \(\alpha\) is a trade-off. If \(\alpha\) is small, it may take too many iteration to converge. However, if it is too large, \(\theta\) cannot even converge because of overshooting.</p>
+<p>Nevertheless, \(\nabla_{\theta} J(\theta)\) is computationally expensive as the training text sample can contain millions of words.</p>
+<p>As the last post mentioned, people normally use <strong>Stochastic Gradient Descent</strong>. Instead of consider all the words in the text, we consider only a portion of the text around the centre word. This portion is called a window. It may work badly for one window of the words. However, as we iterate through all words, it does converge.</p>
+<p><em>Note</em> The window is normally one of the power numbers of \(2\), like \(32\) or \(64\). They can match the structure of GPU relatively easier.</p>
+<p>With the stochastic gradient, as we only compute the gradient of some certain word vectors, \(\nabla_{\theta} J(\theta)\) is large sparse matrix. Therefore, if we use sparse matrix structure instead of dense matrix, we are able to save space of memories.</p>
+<h2 id="probability"><a class="markdownIt-Anchor" href="#probability"></a> Probability</h2>
+<p>in the last post, we mentioned to use softmax function to turn the dot product (cosine similarity) of two vectors into a probability. However, to calculate the probability with softmax function, the computational expense is high. Hence, in standard word2vec, the implementation of the skip-gram model uses <strong>negative sampling</strong>.</p>
+<p>For negative sampling, we need to train binary logistic regressions for a <em>true pair</em> (centre word and word in its context window) versus several <em>noise pairs</em> (the centre word paired with a random word)</p>
+<p>The new cost function is<br />
+\[<br />
+J(\theta) = \frac{1}{T} \sum_{t=1}^{T} J_t(\theta)<br />
+\]<br />
+\[<br />
+J_t(\theta) = -log(\sigma(\mathbf{u_o^T}\mathbf{v_c})) - \sum_{k=1}<sup>{K}log(\sigma(\mathbf{u_k</sup>T}\mathbf{v_c}))<br />
+\]<br />
+where we take (K\) negative samples and<br />
+\[<br />
+\sigma(x) = \frac{1}{1+e^{-x}}<br />
+\]</p>
+<p>For this cost function, we need to maximise probability that real outside word appears but minimise probability that random words appear around centre word.<br />
+\[<br />
+P(w) = \frac{U(w)^{\frac{3}{4}}}{Z}<br />
+\]<br />
+where \(Z\) is for the normalisation and \(U(w)\) is a unigram distribution so that \(P(w_1, w_2) = P(w_1|w_2)P(w_2) \) turns to \(P_{uni}(w_1, w_2) = P(w_1)P(w_2)\). The \(\frac{3}{4}\) is a hyperparameter.</p>
+<h2 id="co-occurrence-vector-todo"><a class="markdownIt-Anchor" href="#co-occurrence-vector-todo"></a> Co-occurrence Vector (TODO)</h2>
+<p>An alternative approach. It produce a large matrix, but can be reduce the dimension using SVD. More about SVD, we will discuss in later post.</p>
+<p>It may compose a vector space such that semantic similarity can be found be inspecting the linear relation between words. E.g.) The vector difference between <em>Swim</em> and <em>Swimmer</em> can be close to the difference between <em>Teach</em> and <em>Teacher</em></p>
+<h2 id="hybrid-of-two-approach-todo"><a class="markdownIt-Anchor" href="#hybrid-of-two-approach-todo"></a> Hybrid of Two Approach (TODO)</h2>
+<p>Instead of using the co-occurrence probability, use the ratio of the co-occurrence probability can improve the result.</p>
+<h2 id="question-about-the-symmetry"><a class="markdownIt-Anchor" href="#question-about-the-symmetry"></a> Question About the Symmetry</h2>
+<p>Recall from the last post, we can do word composition with word vectors. For example,<br />
+\[<br />
+w_{King} - w_{Man} + w_{Woman} = w_{Queen}<br />
+\]</p>
+<p>However, it seems the rule is not simply a vector addition.<br />
+<img src="asymmetry.png" srcset="/img/loading.gif" alt="asymmetry" /></p>
+<p>It is clear that<br />
+\[<br />
+w_{Unscrupulous} - w_{Man} + w_{Woman} = w_{Dishonest}<br />
+\]<br />
+and<br />
+\[<br />
+w_{Dishonest} - w_{Woman} + w_{Man} = w_{Inept}<br />
+\]<br />
+rather than returning to \(w_{Unscrupulous}\).</p>
+<p>Currently, we have two hypotheses. One is that occurs because of the bias of the training sample and the default word2vec algorithm does not have debias approach. The other is that the way to calculate the similarity does not simply use the vector addition or something similar due to the multi-dimension.</p>
+<p><em>Note</em> the hypotheses need verification.</p>
+<hr />
+<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
+<p>The creation of this post is inspired by <strong>Datawhale</strong>. The learning path is based on <strong>Stanford University CS224n: Natural Language Processing with Deep Learning</strong>.</p>
+<hr />
+<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
 <ol>
-<li>Start with a unigram vocabulary of all (Unicode) characters in data.</li>
-<li>Use the most frequent \(n\)-gram pairs to generate a new \(n\)-gram.</li>
-<li>Have a target vocabulary size and stop when you reach it.</li>
-<li></li>
+<li><a href="http://Bilibili.com" target="_blank" rel="noopener">Bilibili.com</a>. 2020. [online] Available at: <a href="https://www.bilibili.com/video/BV1s4411N7fC?p=13" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1s4411N7fC?p=13</a> [Accessed 3 July 2020].</li>
+<li><a href="http://Nlp.seas.harvard.edu" target="_blank" rel="noopener">Nlp.seas.harvard.edu</a>. 2020. The Annotated Transformer. [online] Available at: <a href="http://nlp.seas.harvard.edu/2018/04/03/attention.html" target="_blank" rel="noopener">http://nlp.seas.harvard.edu/2018/04/03/attention.html</a> [Accessed 3 July 2020].</li>
 </ol>
-<p>An example is shown as below.<br><strong>Step 1</strong><br><img src="step1.png" srcset="/img/loading.gif" alt="step1"></p>
-<p><strong>Step 2</strong><br><img src="step2.png" srcset="/img/loading.gif" alt="step2"></p>
-<p><strong>Step 3</strong><br><img src="step3.png" srcset="/img/loading.gif" alt="step3"></p>
-<p><strong>Step 4</strong><br><img src="step4.png" srcset="/img/loading.gif" alt="step4"></p>
-<hr>
-<h1 id="Practice-in-Python-TODO"><a href="#Practice-in-Python-TODO" class="headerlink" title="Practice in Python (TODO)"></a>Practice in Python (TODO)</h1><!-- ---
-# Compute word2vec From Scratch (TODO) -->
-
-<hr>
-<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>. The learning path is based on <strong>Stanford University CS224n: Natural Language Processing with Deep Learning</strong>.</p>
-<hr>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
-<li>Bilibili.com. 2020. [online] Available at: <a href="https://www.bilibili.com/video/BV1s4411N7fC?p=12" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1s4411N7fC?p=12</a> [Accessed 30 June 2020].</li>
-</ol>
-<hr>
+<hr />
 
             </article>
             <hr>
@@ -241,18 +300,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/07/02/Computer-Vision-Foundation3-Haar-Like-Feature/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Computer Vision Foundation 3: Haar-like Feature</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/06/27/NLP2-Word-Vectors-Algorithm-and-Analysis/">
-                        <span class="hidden-mobile">Natural Language Processing2: Word Vectors -> Algorithm and Analysis</span>
+                      <a href="/2020/07/02/Computer-Vision-Foundation3-Haar-Like-Feature/">
+                        <span class="hidden-mobile">Computer Vision Foundation 3: Haar-like Feature</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -408,7 +461,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Natural Language Processing3: Subword Models&nbsp;",
+        "Natural Language Processing4: Contextual Word Embeddings&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
