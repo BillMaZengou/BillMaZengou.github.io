@@ -13,6 +13,8 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
   <meta name="author" content="Zengou Ma">
@@ -115,7 +117,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/img/default.png') no-repeat center center;
+         style="background: url('/img/bg/banner.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -139,7 +141,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    469 字
+                    479 字
                   </span>
                 
 
@@ -185,28 +187,20 @@
 <li>Practice with OpenCV in Python</li>
 <li>Compute Haar From Scratch</li>
 </ol>
-<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; <a href="http://haar.py" target="_blank" rel="noopener">haar.py</a> (OpenCV)</p>
-<hr />
-<h1 id="the-basic-principles-of-haar"><a class="markdownIt-Anchor" href="#the-basic-principles-of-haar"></a> The Basic Principles of Haar</h1>
-<p>All human faces share some similar properties. These regularities may be matched using <strong>Haar Features</strong>.</p>
-<hr />
-<h1 id="practice-with-opencv-in-python"><a class="markdownIt-Anchor" href="#practice-with-opencv-in-python"></a> Practice with OpenCV in Python</h1>
-<h3 id="documentation"><a class="markdownIt-Anchor" href="#documentation"></a> Documentation</h3>
-<p>In OpenCV, we can use exactly the same code as the last post. However, we need to replace the <strong>xml</strong> file of LBP to it of the Haar.</p>
+<p>Source code: <a href="https://github.com/BillMaZengou/cv_basis" target="_blank" rel="noopener">https://github.com/BillMaZengou/cv_basis</a> -&gt; haar.py (OpenCV)</p>
+<hr>
+<h1 id="The-Basic-Principles-of-Haar"><a href="#The-Basic-Principles-of-Haar" class="headerlink" title="The Basic Principles of Haar"></a>The Basic Principles of Haar</h1><p>All human faces share some similar properties. These regularities may be matched using <strong>Haar Features</strong>.</p>
+<hr>
+<h1 id="Practice-with-OpenCV-in-Python"><a href="#Practice-with-OpenCV-in-Python" class="headerlink" title="Practice with OpenCV in Python"></a>Practice with OpenCV in Python</h1><h3 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h3><p>In OpenCV, we can use exactly the same code as the last post. However, we need to replace the <strong>xml</strong> file of LBP to it of the Haar.</p>
 <p>In the corresponding environment, use</p>
-<pre class="highlight"><code class="">pip show opencv-python
-</code></pre>
-<p>to find the <strong>location</strong> of the library.</p>
+<pre><code>pip show opencv-python</code></pre><p>to find the <strong>location</strong> of the library.</p>
 <p>Then enter the location, follow with</p>
-<pre class="highlight"><code class="">cd cv2 &amp;&amp; ls data
-</code></pre>
-<p>to find <code>haarcascade_SOMETHING.xml</code> files which are pre-trained for different purposes.</p>
-<h3 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h3>
-<pre class="highlight"><code class="">import cv2
+<pre><code>cd cv2 &amp;&amp; ls data</code></pre><p>to find <code>haarcascade_SOMETHING.xml</code> files which are pre-trained for different purposes.</p>
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><pre><code>import cv2
 import numpy as np
 
-haar_front_face_xml = 'haarcascade_frontalface_default.xml'  # Your .xml file directory
-haar_eye_xml = 'haarcascade_eye.xml'  # Your .xml file directory
+haar_front_face_xml = &#39;haarcascade_frontalface_default.xml&#39;  # Your .xml file directory
+haar_eye_xml = &#39;haarcascade_eye.xml&#39;  # Your .xml file directory
 
 def StaticDetect(filename):
     face_cascade = cv2.CascadeClassifier(haar_front_face_xml)
@@ -217,8 +211,8 @@ def StaticDetect(filename):
     for (x, y, w, h) in faces:
         img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-    cv2.namedWindow('Face Detected！', 0)
-    cv2.imshow('Face Detected！', img)
+    cv2.namedWindow(&#39;Face Detected！&#39;, 0)
+    cv2.imshow(&#39;Face Detected！&#39;, img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -228,7 +222,7 @@ def StaticDetect(filename):
 
       # Turn on the camera
       camera = cv2.VideoCapture(0)
-      cv2.namedWindow('Dynamic')
+      cv2.namedWindow(&#39;Dynamic&#39;)
 
       while True:
           # Read a frame
@@ -243,34 +237,28 @@ def StaticDetect(filename):
                   for (ex, ey, ew, eh) in eyes:
                       cv2.rectangle(frame, (ex + x, ey + y), (x + ex + ew, y + ey + eh), (0, 255, 0), 2)
 
-              cv2.imshow('Dynamic', frame)
+              cv2.imshow(&#39;Dynamic&#39;, frame)
 
-              if cv2.waitKey(100) &amp; 0xff == ord('q'):
+              if cv2.waitKey(100) &amp; 0xff == ord(&#39;q&#39;):
                   break
       camera.release()
       cv2.destroyAllWindows()
 
 
-if __name__ == '__main__':
+if __name__ == &#39;__main__&#39;:
     filename = &quot;...&quot;  # Your image directory
     StaticDetect(filename)  # Image faces/eyes detection
-    DynamicDetect()  # Video faces/eyes detection
-</code></pre>
-<p><strong>Face Recognition</strong><br />
-<img src="Solvay_Conferences.png" srcset="/img/loading.gif" alt="Solvay_Conferences" /></p>
+    DynamicDetect()  # Video faces/eyes detection</code></pre><p><strong>Face Recognition</strong><br><img src="Solvay_Conferences.png" srcset="/img/loading.gif" alt="Solvay_Conferences"></p>
 <p>The problem about this approach is similar as the LBP. It has two hyperparameters which are hard to choose. Therefore human intervenes are necessary.</p>
 <p>Another issue is that Haar-like features have a greater chance to fail if the object is rotated or tilted.</p>
-<hr />
-<h1 id="compute-haar-from-scratch-todo"><a class="markdownIt-Anchor" href="#compute-haar-from-scratch-todo"></a> Compute Haar From Scratch (TODO)</h1>
-<hr />
-<h1 id="acknowledgement"><a class="markdownIt-Anchor" href="#acknowledgement"></a> Acknowledgement</h1>
-<p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
-<hr />
-<h1 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> Reference</h1>
-<ol>
-<li><a href="http://En.wikipedia.org" target="_blank" rel="noopener">En.wikipedia.org</a>. 2020. Viola–Jones Object Detection Framework. [online] Available at: <a href="https://en.wikipedia.org/wiki/Viola%E2%80%93Jones_object_detection_framework" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Viola–Jones_object_detection_framework</a> [Accessed 2 July 2020].</li>
+<hr>
+<h1 id="Compute-Haar-From-Scratch-TODO"><a href="#Compute-Haar-From-Scratch-TODO" class="headerlink" title="Compute Haar From Scratch (TODO)"></a>Compute Haar From Scratch (TODO)</h1><hr>
+<h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>.</p>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li>En.wikipedia.org. 2020. Viola–Jones Object Detection Framework. [online] Available at: <a href="https://en.wikipedia.org/wiki/Viola%E2%80%93Jones_object_detection_framework" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Viola%E2%80%93Jones_object_detection_framework</a> [Accessed 2 July 2020].</li>
 </ol>
-<hr />
+<hr>
 
             </article>
             <hr>

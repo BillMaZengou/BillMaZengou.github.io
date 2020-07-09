@@ -13,6 +13,8 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
   <meta name="author" content="Zengou Ma">
@@ -115,7 +117,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/img/default.png') no-repeat center center;
+         style="background: url('/img/bg/banner.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -237,20 +239,19 @@ for i in anti_fruit:
     print(i)
 
 result = model.most_similar(positive=[&#39;woman&#39;,&#39;king&#39;], negative=[&#39;man&#39;])
-print(&quot;{}: {:.4f}&quot;.format(*result[0]))
-</code></pre><p>Example results are shown below:<br><strong>Similar Words To Obama</strong><br><img src="obama.png" srcset="/img/loading.gif" alt="obama"></p>
+print(&quot;{}: {:.4f}&quot;.format(*result[0]))</code></pre><p>Example results are shown below:<br><strong>Similar Words To Obama</strong><br><img src="obama.png" srcset="/img/loading.gif" alt="obama"></p>
 <p><strong>Dissimilar Words To Banana</strong><br><img src="banana.png" srcset="/img/loading.gif" alt="banana"></p>
-<p><strong>Word Composition</strong><br>\[<br>  w<em>{King} - w</em>{Man} + w<em>{Woman} = w</em>{Queen}<br>\]<br><img src="queen.png" srcset="/img/loading.gif" alt="queen"></p>
+<p><strong>Word Composition</strong><br>\[<br>  w_{King} - w_{Man} + w_{Woman} = w_{Queen}<br>\]<br><img src="queen.png" srcset="/img/loading.gif" alt="queen"></p>
 <hr>
 <h1 id="Compute-word2vec-From-Scratch-TODO"><a href="#Compute-word2vec-From-Scratch-TODO" class="headerlink" title="Compute word2vec From Scratch (TODO)"></a>Compute word2vec From Scratch (TODO)</h1><hr>
-<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><p>For each position \(t = 1,…,T\), predict context words within a window of fixed size \(m\), given centre word \(w<em>j\), we have a likelihood function such that<br>\[<br>  L(\theta) = \prod</em>{t=1}^T \prod<em>{-m \leq j \leq m, j \neq 0} P(w</em>{t+j}|w_t;\theta)<br>\]</p>
-<p>The objective function, or so-called loss or cost function, \(J(\theta)\) is the normalised negative log likelihood,<br>\[<br>  J(\theta) = -\frac{1}{T}log(L(\theta)) = -\frac{1}{T} \sum<em>{t=1}^T \sum</em>{-m \leq j \leq m, j \neq 0} log(P(w_{t+j}|w_t;\theta) )<br>\]</p>
+<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><p>For each position \(t = 1,…,T\), predict context words within a window of fixed size \(m\), given centre word \(w_j\), we have a likelihood function such that<br>\[<br>  L(\theta) = \prod_{t=1}^T \prod_{-m \leq j \leq m, j \neq 0} P(w_{t+j}|w_t;\theta)<br>\]</p>
+<p>The objective function, or so-called loss or cost function, \(J(\theta)\) is the normalised negative log likelihood,<br>\[<br>  J(\theta) = -\frac{1}{T}log(L(\theta)) = -\frac{1}{T} \sum_{t=1}^T \sum_{-m \leq j \leq m, j \neq 0} log(P(w_{t+j}|w_t;\theta) )<br>\]</p>
 <p>Thus, our goal is to minimise the objective function so that the predictive accuracy can be maximised.</p>
-<p>The probability of the words are calculated using <strong>softmax</strong> function, which is commonly used in classification. Therefore,<br>\[<br>  P(o|c) = \frac{exp(u<em>{o}^{T} v_c)}{\sum</em>{w}exp(u_{w}^{T} v_c)}<br>\]<br>where \(v_c\) and \(u_w\) are the word vectors. \(w\) is the context words.</p>
-<p>In the objective function, \(\theta\) can represent all model parameters in one long vector. In our case with \(d\)-dimensional vectors and \(V\)-many words, we have a vector with \(2dV\) elements.<br>\[<br>  \theta =<br>  \begin{bmatrix}<br>  v<em>{a}\\<br>  .\\<br>  .\\<br>  .\\<br>  v</em>{zebra}\\<br>  u<em>{a}\\<br>  .\\<br>  .\\<br>  .\\<br>  u</em>{zebra}\\<br>  \end{bmatrix}<br>\]<br><em>Note</em> every word has two vectors.</p>
+<p>The probability of the words are calculated using <strong>softmax</strong> function, which is commonly used in classification. Therefore,<br>\[<br>  P(o|c) = \frac{exp(u_{o}^{T} v_c)}{\sum_{w}exp(u_{w}^{T} v_c)}<br>\]<br>where \(v_c\) and \(u_w\) are the word vectors. \(w\) is the context words.</p>
+<p>In the objective function, \(\theta\) can represent all model parameters in one long vector. In our case with \(d\)-dimensional vectors and \(V\)-many words, we have a vector with \(2dV\) elements.<br>\[<br>  \theta =<br>  \begin{bmatrix}<br>  v_{a}\\<br>  .\\<br>  .\\<br>  .\\<br>  v_{zebra}\\<br>  u_{a}\\<br>  .\\<br>  .\\<br>  .\\<br>  u_{zebra}\\<br>  \end{bmatrix}<br>\]<br><em>Note</em> every word has two vectors.</p>
 <p>To optimise the objective function, we need to take derivative for both \(v_c\) and \(u_w\).</p>
-<h3 id="Optimise-with-respect-to-v-c"><a href="#Optimise-with-respect-to-v-c" class="headerlink" title="Optimise with respect to \(v_c\)"></a>Optimise with respect to \(v_c\)</h3><p>\[<br>  \frac{\partial}{\partial v<em>c} log(\frac{exp(u</em>{o}^{T} v<em>c)}{\sum</em>{w}exp(u<em>{w}^{T} v_c)})<br>\]<br>\[<br> =&gt;  \frac{\partial}{\partial v_c} u</em>{o}^{T} v<em>c - \frac{\partial}{\partial v_c} log(\sum</em>{w}exp(u<em>{w}^{T} v_c))<br>\]<br>\[<br> =&gt; u</em>{o}^{T} - \sum<em>x \frac{exp(u</em>{x}^T v<em>c)}{\sum</em>{w}exp(u<em>{w}^{T} v_c)} u_x<br>\]<br>\[<br> =&gt; u</em>{o}^{T} - \sum_x P(x|c) u_x<br>\]</p>
-<h3 id="Optimise-with-respect-to-u-w"><a href="#Optimise-with-respect-to-u-w" class="headerlink" title="Optimise with respect to \(u_w\)"></a>Optimise with respect to \(u_w\)</h3><p>\[<br>  \frac{\partial}{\partial u<em>o} log(\frac{exp(u</em>{o}^{T} v<em>c)}{\sum</em>{w}exp(u<em>{w}^{T} v_c)})<br>\]<br>\[<br> =&gt;  \frac{\partial}{\partial u_o} u</em>{o}^{T} v<em>c - \frac{\partial}{\partial u_o} log(\sum</em>{w}exp(u<em>{w}^{T} v_c))<br>\]<br>\[<br> =&gt; v_c - \frac{exp(u</em>{o}^T v<em>c)}{\sum</em>{w}exp(u_{w}^{T} v_c)} v_c<br>\]<br>\[<br> =&gt; v_c - P(o|c) v_c<br>\]</p>
+<h3 id="Optimise-with-respect-to-v-c"><a href="#Optimise-with-respect-to-v-c" class="headerlink" title="Optimise with respect to \(v_c\)"></a>Optimise with respect to \(v_c\)</h3><p>\[<br>  \frac{\partial}{\partial v_c} log(\frac{exp(u_{o}^{T} v_c)}{\sum_{w}exp(u_{w}^{T} v_c)})<br>\]<br>\[<br> =&gt;  \frac{\partial}{\partial v_c} u_{o}^{T} v_c - \frac{\partial}{\partial v_c} log(\sum_{w}exp(u_{w}^{T} v_c))<br>\]<br>\[<br> =&gt; u_{o}^{T} - \sum_x \frac{exp(u_{x}^T v_c)}{\sum_{w}exp(u_{w}^{T} v_c)} u_x<br>\]<br>\[<br> =&gt; u_{o}^{T} - \sum_x P(x|c) u_x<br>\]</p>
+<h3 id="Optimise-with-respect-to-u-w"><a href="#Optimise-with-respect-to-u-w" class="headerlink" title="Optimise with respect to \(u_w\)"></a>Optimise with respect to \(u_w\)</h3><p>\[<br>  \frac{\partial}{\partial u_o} log(\frac{exp(u_{o}^{T} v_c)}{\sum_{w}exp(u_{w}^{T} v_c)})<br>\]<br>\[<br> =&gt;  \frac{\partial}{\partial u_o} u_{o}^{T} v_c - \frac{\partial}{\partial u_o} log(\sum_{w}exp(u_{w}^{T} v_c))<br>\]<br>\[<br> =&gt; v_c - \frac{exp(u_{o}^T v_c)}{\sum_{w}exp(u_{w}^{T} v_c)} v_c<br>\]<br>\[<br> =&gt; v_c - P(o|c) v_c<br>\]</p>
 <hr>
 <h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>. The learning path is based on <strong>Stanford University CS224n: Natural Language Processing with Deep Learning</strong>.</p>
 <hr>

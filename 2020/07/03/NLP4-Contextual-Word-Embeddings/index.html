@@ -13,6 +13,8 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   <meta name="description" content="UCL MRes Virtual Reality; University of Warwick BSc Physics">
   <meta name="author" content="Zengou Ma">
@@ -115,7 +117,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/img/default.png') no-repeat center center;
+         style="background: url('/img/bg/banner.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -193,7 +195,9 @@
 <p>Another improvement is to use multi-head attention such that<br>\[<br>  MultiHead(Q, K, V) = Concat(head_1, …, head_h)W^O<br>\]<br>where<br>\[<br>  head_i = A(QW_i^Q, KW_i^K, VW_i^V)<br>\]</p>
 <h1 id="BERT-TODO"><a href="#BERT-TODO" class="headerlink" title="BERT (TODO)"></a>BERT (TODO)</h1><p>With the improvement made by Transformer, a new model was proposed by Google AI. That is <strong>BERT</strong>, which stands for <strong>Bidirectional Encoder Representations from Transformers</strong>. It is a pre-training of deep bidirectional Transformers for language understanding.</p>
 <!-- However, until now, we have not discussed a way to contextually embed the words. -->
+
 <!-- Source code: https://github.com/BillMaZengou/nlp_basis -> WordVector.ipynb -->
+
 <hr>
 <h1 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h1><p>The creation of this post is inspired by <strong>Datawhale</strong>. The learning path is based on <strong>Stanford University CS224n: Natural Language Processing with Deep Learning</strong>.</p>
 <hr>
